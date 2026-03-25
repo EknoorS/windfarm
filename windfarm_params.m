@@ -38,7 +38,7 @@ f = 50; % Hz
 freq = 50;
 w = 2*pi*f;
 
-length_onshore = 215;
+length_onshore = 150;
 length_SM = 60; 
 
 L1_Le_1 = X1_Le_1 / w;      % H/km
@@ -114,8 +114,7 @@ R0_TA37 = R1_TA37;
 X0_TA37 = 2.4 * X1_TA37;
 
 % inductances
-L1_TB1 = X1_TB1 / w;
-L0_TB1 = X0_TB1 / w;
+L1_TB1 = X0_TB1 / w;
 
 L1_TB2 = X1_TB2 / w;
 L0_TB2 = X0_TB2 / w;
