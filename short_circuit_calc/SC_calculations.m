@@ -458,7 +458,9 @@ I_fault_B1 %[output:434c72cf]
 %%
 %[text] ## Single phase to earth fault on Export Cable B1 
 
-%From B1 current source to B1 Export cable
+%%
+%[text] ## From B1 current source to B1 Export cable
+
 z_ll1 = Z0_Le_ON_pu + Z0_grid_pu %[output:0fdd93ac]
 z_ll2 = Z0_Le2_pu + Z0_TA38a_pu %[output:9d0f2269]
 z_ll3 = Z0_Le2_pu + Z0_TA38b_pu %[output:113a5539]
@@ -594,6 +596,43 @@ z1 = Z_fault_A37(2, 2) %[output:1f7e3b0e]
 z2 = Z1_Le_ON_pu + Z_grid_pu %[output:383f390c]
 fprintf("Fault current");  %[output:85fed965]
 abs(1.1 * (z2/(z2+z1))) %[output:4a7ae750]
+
+%%
+%[text] ## From the grid to Export cable
+Z_from_grid = zeros(6, 6);
+
+Z_from_grid(1, 1) = 1/(Z_grid_pu + Z1_Le_ON_pu + ZLe1_1_pu);
+Z_from_grid(2, 2) = Z_from_grid(1, 1) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu) + 1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu) + 1/(ZTA37_pu+Z0_Le3_pu);
+Z_from_grid(3, 3) = 1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le1_1_pu) + 1/(Z0_Le2_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu);
+Z_from_grid(4, 4) = 1/(Z0_Le1_2_pu) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu);
+Z_from_grid(5, 5) = 1/(Z0_Le2_pu) + 1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu);
+Z_from_grid(6, 6) = 1/(Z0_Le1_1_pu) + 1/(Z0_Le1_2_pu) + 1/(Z_grid_pu + Z1_Le_ON + ZLe1_1_pu);
+
+Z_from_grid(1, 2) = -(1/(Z_grid_pu + Z1_Le_ON_pu + ZLe1_1_pu));
+Z_from_grid(2, 1) = Z_from_grid(1, 2);
+
+Z_from_grid(4, 2) = -(1/(Z0_TB1_pu) + 1/(Z0_TB2_pu));
+Z_from_grid(2, 4) = Z_from_grid(4, 2);
+
+Z_from_grid(4, 6) = -(1/(Z0_Le1_2_pu));
+Z_from_grid(6, 4) = Z_from_grid(4, 6);
+
+Z_from_grid(3, 6) = -(1/(Z0_Le1_1_pu));
+Z_from_grid(6, 3) = Z_from_grid(3, 6);
+
+Z_from_grid(3, 2) = -(1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu));
+Z_from_grid(2, 3) = Z_from_grid(3, 2);
+
+Z_from_grid(3, 5) = -(1/(Z0_Le2_pu));
+Z_from_grid(5, 3) = Z_from_grid(3, 5);
+
+Z_from_grid(5, 2) = -(1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu));
+Z_from_grid(2, 5) = Z_from_grid(5, 2);
+
+Z_fault_from_grid = Z_from_grid \ eye(size(Z_from_grid));
+z1 = Z_fault_from_grid(1, 1) %[output:7b369c61]
+fprintf("Fault current");  %[output:3980b216]
+abs(1 / (z1)) %[output:67e0d107]
 
 %[appendix]{"version":"1.0"}
 %---
@@ -1067,4 +1106,13 @@ abs(1.1 * (z2/(z2+z1))) %[output:4a7ae750]
 %---
 %[output:4a7ae750]
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.2426"}}
+%---
+%[output:7b369c61]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0313 + 0.3112i"}}
+%---
+%[output:3980b216]
+%   data: {"dataType":"text","outputData":{"text":"Fault current","truncated":false}}
+%---
+%[output:67e0d107]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"3.1975"}}
 %---
