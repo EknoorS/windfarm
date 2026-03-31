@@ -401,58 +401,133 @@ I_fault2 = A_fault * V %[output:41d99e86]
 
 S_bus = V .* I %[output:76bbb151]
 
+%%
+%[text] ## 3 phase short at the export cable
+Z_fault_3f_e = zeros(16, 16) %[output:2e021f91]
 
+Z_fault_3f_e(1,1) = eps;
+Z_fault_3f_e(2,2) =  1 / (Z_grid_pu + Z1_Le_ON_pu) + 1 / ZLe2_pu + 1 / ZLe3_pu  + 1/ZLe1_1_pu;
+Z_fault_3f_e(3,3) =  1/ZLe1_2_pu + 1 / ZTB1_pu + 1 / ZTB2_pu;
+Z_fault_3f_e(4,4) =  1 / ZLe2_pu + 1 / ZTA38a_pu + 1 / ZTA38b_pu;
+Z_fault_3f_e(5,5) =  1 / ZLe3_pu + 1 / ZTA37_pu;
+Z_fault_3f_e(6,6) =  1 / ZTB1_pu + 1/ ZfLB1_pu;
+Z_fault_3f_e(7,7) =  1 / ZTB2_pu + 1 / ZfLB2_pu;
+Z_fault_3f_e(8,8) =  1 / ZTA38a_pu + 1 / ZfLA38a_pu;
+Z_fault_3f_e(9,9) =  1 / ZTA38b_pu + 1 / ZfLA38b_pu;
+Z_fault_3f_e(10,10) =  1 / ZTA37_pu + 1 / ZfLA37_pu;
+Z_fault_3f_e(11,11) =  1 / ZfLB1_pu;
+Z_fault_3f_e(12,12) =  1 / ZfLB2_pu;
+Z_fault_3f_e(13,13) =  1 / ZfLA38a_pu;
+Z_fault_3f_e(14,14) =  1 / ZfLA38b_pu;
+Z_fault_3f_e(15,15) =  1 / ZfLA37_pu; 
+Z_fault_3f_e(16,16) =  1/ZLe1_1_pu + 1/ZLe1_2_pu;
 
+Z_fault_3f_e(1, 2) = eps;
+Z_fault_3f_e(2, 1) = Z_fault_3f_e(2, 1);
+
+Z_fault_3f_e(2, 4) = -(1 / ZLe2_pu);
+Z_fault_3f_e(4, 2) = Z_fault_3f_e(2, 4);
+
+Z_fault_3f_e(2, 5) = -(1 / ZLe3_pu);
+Z_fault_3f_e(5, 2) = Z_fault_3f_e(2, 5);
+
+Z_fault_3f_e(3, 6) = -(1 / ZTB1_pu);
+Z_fault_3f_e(6, 3) = Z_fault_3f_e(3, 6);
+
+Z_fault_3f_e(3, 7) = -(1 / ZTB2_pu);
+Z_fault_3f_e(7, 3) = Z_fault_3f_e(3, 7);
+
+Z_fault_3f_e(4, 8) = -(1 / ZTA38a_pu);
+Z_fault_3f_e(8, 4) = Z_fault_3f_e(4, 8);
+
+Z_fault_3f_e(4, 9) = -(1 / ZTA38b_pu);
+Z_fault_3f_e(9, 4) = Z_fault_3f_e(4, 9);
+
+Z_fault_3f_e(5, 10) = -(1 / ZTA37_pu);
+Z_fault_3f_e(10, 5) = Z_fault_3f_e(5, 10);
+
+Z_fault_3f_e(6, 11) = -(1 / ZfLB1_pu);
+Z_fault_3f_e(11, 6) = Z_fault_3f_e(6, 11);
+
+Z_fault_3f_e(7, 12) = -(1 / ZfLB2_pu);
+Z_fault_3f_e(12, 7) = Z_fault_3f_e(7, 12);
+
+Z_fault_3f_e(8, 13) = -(1 / ZfLA38a_pu);
+Z_fault_3f_e(13, 8) = Z_fault_3f_e(8, 13);
+
+Z_fault_3f_e(9, 14) = -(1 / ZfLA38b_pu);
+Z_fault_3f_e(14, 9) = Z_fault_3f_e(9, 14);
+
+Z_fault_3f_e(10, 15) = -(1 / ZfLA37_pu);
+Z_fault_3f_e(15, 10) = Z_fault_3f_e(10, 15);
+
+Z_fault_3f_e(2, 16) = -(1/ZLe1_1_pu);
+Z_fault_3f_e(16, 2) = Z_fault_3f_e(2, 16);
+
+Z_fault_3f_e(3, 16) = -(1/ZLe1_2_pu);
+Z_fault_3f_e(16, 3) = Z_fault_3f_e(3, 16);
+
+Z_fault2 = Z_fault_3f_e \ eye(size(Z_fault_3f_e)); %[output:5d46006d]
+fprintf("The grid fault impendance at the point 16 is:") %[output:245dfc12]
+Z_fault2(16, 16) %[output:913c1e5d]
+I_fault_grid = abs(1/Z_fault2(16, 16)) %[output:11b1f05d]
+I_fault_grid*(100e6/(sqrt(3)*380)) %[output:849d6518]
+%From B1 source
+I_fault_b1 =  I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:842ba239]
+I_fault_b2 = I_base_66kv*(3936.479 / I_base_66kv)*1.1
+I_fault_a38a = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
+I_fault_a38b = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
+I_fault_37 = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
 %%
 %[text] ## Single phase to Earth fault calculation 
 %Fault at feeder B1, %%error the fault point is after the delta connection,
 %therefore there is not a return path via earth path!
-I_fault_B1 = zeros(6, 6) %[output:592fb6dd]
-I_base_66kv = Sbase / U_66kv %[output:86fcd048]
+I_fault_B1 = zeros(6, 6) %[output:6fb1238b]
+I_base_66kv = Sbase / U_66kv %[output:2d893d2a]
 
-I_fault_B1(1, 1) = I_base_66kv*(655 / I_base_66kv)*1.1;
+I_fault_B1(1, 1) = I_base_66kv*(3936.479 / I_base_66kv)*1.1;
 
 
 %Contribution from B2 current source
-Z_indirect = ZTB1_pu + ZLe1_pu + Z_grid_pu %[output:64e9a5b0]
-Z_homo = 0 %[output:95404124]
-Z_direct = ZTB1_pu + Z_indirect + Z_homo %[output:2076b4fb]
-ZLe1_pu + Z_grid_pu %[output:87317b6a]
-I_base_66kv = Sbase / U_66kv %[output:2a061424]
+Z_indirect = ZTB1_pu + ZLe1_pu + Z_grid_pu %[output:53c16ddb]
+Z_homo = 0 %[output:9938685b]
+Z_direct = ZTB1_pu + Z_indirect + Z_homo %[output:53090f47]
+ZLe1_pu + Z_grid_pu %[output:2a8822b3]
+I_base_66kv = Sbase / U_66kv %[output:1eb19898]
 
-I_fault = 1.1 *(655 / I_base_66kv)* (ZLe1_pu + Z_grid_pu) / ((ZLe1_pu + Z_grid_pu)+(ZTB1_pu + Z_indirect + Z_homo)) %[output:95177782]
-abs(I_fault) %[output:8959af8f]
-fprintf("The contribution of fault current from source 1 to feeder B2 is: %f02 pu", abs(I_fault)) %[output:56893d3c]
+I_fault = 1.1 *(655 / I_base_66kv)* (ZLe1_pu + Z_grid_pu) / ((ZLe1_pu + Z_grid_pu)+(ZTB1_pu + Z_indirect + Z_homo)) %[output:4322efb4]
+abs(I_fault) %[output:69a9040c]
+fprintf("The contribution of fault current from source 1 to feeder B2 is: %f02 pu", abs(I_fault)) %[output:709a5366]
 % I_fault_B1(2, 1) = abs(I_fault)*I_base_66kv
 I_fault_B1(2, 1) = 0;
 
 %Contribution from A38a current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:06f70dcf]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:0c3d2e68]
-Z_homo = 0 %[output:11d211c2]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:369c01ce]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:6c2b11e5]
+Z_direct = ZLe1_pu + ZTB1_pu %[output:0f70782e]
+Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:337056bd]
+Z_homo = 0 %[output:6e595fa2]
+I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:7de53382]
+fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:7c671131]
 % I_fault_B1(3, 1) = abs(I_fault)*I_base_66kv
 I_fault_B1(3, 1) = 0;
 
 %Contribution from A38b current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:5d3eead5]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:9ad27b64]
-Z_homo = 0 %[output:3f0dca07]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:2523da2e]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:6cb883f1]
+Z_direct = ZLe1_pu + ZTB1_pu %[output:5aed5471]
+Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:04b2abce]
+Z_homo = 0 %[output:2c726d74]
+I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:24793ebb]
+fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:356e6fb8]
 % I_fault_B1(4, 1) = abs(I_fault)*I_base_66kv
 I_fault_B1(4, 1) = 0;
 
 %Contribution from A37 current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:775d2deb]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:8e4a0f2e]
-Z_homo = 0 %[output:7ba6c2fa]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:4ec5ed43]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:9c8b4064]
+Z_direct = ZLe1_pu + ZTB1_pu %[output:5d70d80b]
+Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:49483421]
+Z_homo = 0 %[output:6270d2ae]
+I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:45bf3693]
+fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:511546ff]
 % I_fault_B1(5, 1) = abs(I_fault)*I_base_66kv
 I_fault_B1(5, 1) = 0;
-I_fault_B1 %[output:434c72cf]
+I_fault_B1 %[output:16a0b71a]
 
 
 %%
@@ -461,28 +536,28 @@ I_fault_B1 %[output:434c72cf]
 %%
 %[text] ## From B1 current source to B1 Export cable
 
-z_ll1 = Z0_Le_ON_pu + Z0_grid_pu %[output:0fdd93ac]
-z_ll2 = Z0_Le2_pu + Z0_TA38a_pu %[output:9d0f2269]
-z_ll3 = Z0_Le2_pu + Z0_TA38b_pu %[output:113a5539]
-z_ll4 = Z0_Le3_pu + Z0_TA37_pu %[output:16514b04]
-z_ll5 = (z_ll1^-1 + z_ll2^-1 + z_ll3^-1 + z_ll4^-1)^-1 %[output:57b19742]
-z_s = Z0_Le1_1_pu + z_ll5 %[output:37256d32]
+z_ll1 = Z0_Le_ON_pu + Z0_grid_pu
+z_ll2 = Z0_Le2_pu + Z0_TA38a_pu
+z_ll3 = Z0_Le2_pu + Z0_TA38b_pu
+z_ll4 = Z0_Le3_pu + Z0_TA37_pu
+z_ll5 = (z_ll1^-1 + z_ll2^-1 + z_ll3^-1 + z_ll4^-1)^-1
+z_s = Z0_Le1_1_pu + z_ll5
 
-z_ll6 = (Z0_TB1_pu^-1 + Z0_TB2_pu^-1)^-1 %[output:04e52470]
-z_s2 = Z0_Le1_2_pu + z_ll6 %[output:25d26d1d]
+z_ll6 = (Z0_TB1_pu^-1 + Z0_TB2_pu^-1)^-1
+z_s2 = Z0_Le1_2_pu + z_ll6
 
-z_ll7 = (z_s^-1 + z_s2^-1)^-1 %[output:333e4240]
-Z_homopolar = z_ll7 %[output:856686e9]
+z_ll7 = (z_s^-1 + z_s2^-1)^-1
+Z_homopolar = z_ll7
 
 %Yeah this is taking way too long, imma do it via admittance matrix
-Z_B1 = zeros(5, 5) %[output:0486940b]
+Z_B1 = zeros(5, 5)
 Z_B1(1, 1) = 1 / (ZfLB1_pu + ZTB1_pu + ZLe1_2_pu);
 % Z_B1(2, 2) = Z_B1(1, 1) + 1/(ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / ( ...
 %     Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_TB1_pu)
-Z_B1(2, 2) = Z_B1(1, 1) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / ( ... %[output:group:6d172f33] %[output:32532c46]
-    Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_TB1_pu) %[output:group:6d172f33] %[output:32532c46]
-Z_B1(3, 3) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le1_2_pu + Z0_TB2_pu) + 1 / (Z0_Le1_2_pu) %[output:5db6659c]
-Z_B1(4, 4) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / (Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) %[output:9a967595]
+Z_B1(2, 2) = Z_B1(1, 1) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / ( ...
+    Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_TB1_pu)
+Z_B1(3, 3) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le1_2_pu + Z0_TB2_pu) + 1 / (Z0_Le1_2_pu)
+Z_B1(4, 4) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / (Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu)
 Z_B1(5, 5) = 1 / (Z0_TB1_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_Le1_2_pu);
 
 %Off-diagonal terms
@@ -501,16 +576,16 @@ Z_B1(4, 3) = Z_B1(3, 4);
 Z_B1(3, 5) = - (1 / (Z0_Le1_2_pu));
 Z_B1(5, 3) = Z_B1(3, 5);
 
-Z_fault_B1 = Z_B1 \ eye(size(Z_B1)) %[output:4364440b]
-z1 = Z_fault_B1(2, 2) %[output:301e4e7d]
+Z_fault_B1 = Z_B1 \ eye(size(Z_B1))
+z1 = Z_fault_B1(2, 2)
 
-z2 = ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu %[output:2c3b1f44]
+z2 = ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu
 
-z3 = (z1^-1 + z2^-2)^-1 %[output:9fad2ad7]
+z3 = (z1^-1 + z2^-2)^-1
 
-abs(z3) %[output:3705d490]
-fprintf("Fault current going throught the fault point: ") %[output:8123f72a]
-abs(1.1 * (z2 / (z2 + z1))) %[output:3be24a1e]
+abs(z3)
+fprintf("Fault current going throught the fault point: ")
+abs(1.1 * (z2 / (z2 + z1)))
 
 %%
 %[text] ## From current source A38a to export cable
@@ -552,11 +627,11 @@ Z_A38a(4, 7) = -(1/(Z0_Le1_2_pu));
 Z_A38a(7, 4) = Z_A38a(4, 7);
 
 Z_fault_A38a = Z_A38a \ eye(size(Z_A38a));
-fprintf("The equivalent impendance value at the fault location is: "); %[output:809ced5b]
-z1 = Z_fault_A38a(3, 3) %[output:744ad5cf]
-z2 = Z1_Le_ON_pu + Z_grid_pu %[output:0f43b92e]
-fprintf("Fault current"); %[output:10c85076]
-abs(1.1 * (z2/(z1+z2))) %[output:612c66ec]
+fprintf("The equivalent impendance value at the fault location is: ");
+z1 = Z_fault_A38a(3, 3)
+z2 = Z1_Le_ON_pu + Z_grid_pu
+fprintf("Fault current");
+abs(1.1 * (z2/(z1+z2)))
 
 %%
 %[text] ## From current source A37 to export cable
@@ -591,11 +666,11 @@ Z_A37(3, 6) = -(1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le2_pu + Z0_TA38a_pu) + 1/(
 Z_A37(6, 3) = Z_A37(3, 6);
 
 Z_fault_A37 = Z_A37 \ eye(size(Z_A37));
-fprintf("The equivalent impendance value at the fault location is: "); %[output:41822cf6]
-z1 = Z_fault_A37(2, 2) %[output:1f7e3b0e]
-z2 = Z1_Le_ON_pu + Z_grid_pu %[output:383f390c]
-fprintf("Fault current");  %[output:85fed965]
-abs(1.1 * (z2/(z2+z1))) %[output:4a7ae750]
+fprintf("The equivalent impendance value at the fault location is: ");
+z1 = Z_fault_A37(2, 2)
+z2 = Z1_Le_ON_pu + Z_grid_pu
+fprintf("Fault current"); 
+abs(1.1 * (z2/(z2+z1)))
 
 %%
 %[text] ## From the grid to Export cable
@@ -630,9 +705,9 @@ Z_from_grid(5, 2) = -(1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu));
 Z_from_grid(2, 5) = Z_from_grid(5, 2);
 
 Z_fault_from_grid = Z_from_grid \ eye(size(Z_from_grid));
-z1 = Z_fault_from_grid(1, 1) %[output:7b369c61]
-fprintf("Fault current");  %[output:3980b216]
-abs(1 / (z1)) %[output:67e0d107]
+z1 = Z_fault_from_grid(1, 1)
+fprintf("Fault current"); 
+abs(1 / (z1))
 
 %[appendix]{"version":"1.0"}
 %---
@@ -936,183 +1011,102 @@ abs(1 / (z1)) %[output:67e0d107]
 %[output:76bbb151]
 %   data: {"dataType":"matrix","outputData":{"columns":1,"name":"S_bus","rows":15,"type":"complex","value":[["0.0000 + 0.0000i"],["0.0104 + 0.1657i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"]]}}
 %---
-%[output:592fb6dd]
+%[output:2e021f91]
+%   data: {"dataType":"matrix","outputData":{"columns":16,"name":"Z_fault_3f_e","rows":16,"type":"double","value":[["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]]}}
+%---
+%[output:5d46006d]
+%   data: {"dataType":"warning","outputData":{"text":"Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  1.816599e-19."}}
+%---
+%[output:245dfc12]
+%   data: {"dataType":"text","outputData":{"text":"The grid fault impendance at the point 16 is:","truncated":false}}
+%---
+%[output:913c1e5d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0125 + 0.1683i"}}
+%---
+%[output:11b1f05d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid","value":"5.9264"}}
+%---
+%[output:849d6518]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"9.0042e+05"}}
+%---
+%[output:842ba239]
+%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Unrecognized function or variable 'I_base_66kv'."}}
+%---
+%[output:6fb1238b]
 %   data: {"dataType":"matrix","outputData":{"columns":6,"name":"I_fault_B1","rows":6,"type":"double","value":[["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
 %---
-%[output:86fcd048]
+%[output:2d893d2a]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_base_66kv","value":"1.5152e+03"}}
 %---
-%[output:64e9a5b0]
+%[output:53c16ddb]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
 %---
-%[output:95404124]
+%[output:9938685b]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
 %---
-%[output:2076b4fb]
+%[output:53090f47]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0124 + 0.2173i"}}
 %---
-%[output:87317b6a]
+%[output:2a8822b3]
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0124 + 0.1706i"}}
 %---
-%[output:2a061424]
+%[output:1eb19898]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_base_66kv","value":"1.5152e+03"}}
 %---
-%[output:95177782]
+%[output:4322efb4]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2093 - 0.0018i"}}
 %---
-%[output:8959af8f]
+%[output:69a9040c]
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.2093"}}
 %---
-%[output:56893d3c]
+%[output:709a5366]
 %   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source 1 to feeder B2 is: 0.20928802 pu","truncated":false}}
 %---
-%[output:06f70dcf]
+%[output:0f70782e]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
 %---
-%[output:0c3d2e68]
+%[output:337056bd]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
 %---
-%[output:11d211c2]
+%[output:6e595fa2]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
 %---
-%[output:369c01ce]
+%[output:7de53382]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
 %---
-%[output:6c2b11e5]
+%[output:7c671131]
 %   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
 %---
-%[output:5d3eead5]
+%[output:5aed5471]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
 %---
-%[output:9ad27b64]
+%[output:04b2abce]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
 %---
-%[output:3f0dca07]
+%[output:2c726d74]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
 %---
-%[output:2523da2e]
+%[output:24793ebb]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
 %---
-%[output:6cb883f1]
+%[output:356e6fb8]
 %   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
 %---
-%[output:775d2deb]
+%[output:5d70d80b]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
 %---
-%[output:8e4a0f2e]
+%[output:49483421]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
 %---
-%[output:7ba6c2fa]
+%[output:6270d2ae]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
 %---
-%[output:4ec5ed43]
+%[output:45bf3693]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
 %---
-%[output:9c8b4064]
+%[output:511546ff]
 %   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
 %---
-%[output:434c72cf]
-%   data: {"dataType":"matrix","outputData":{"columns":6,"name":"I_fault_B1","rows":6,"type":"double","value":[["720.5000","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
-%---
-%[output:0fdd93ac]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll1","value":"0.0646 + 0.6629i"}}
-%---
-%[output:9d0f2269]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll2","value":"0.0042 + 0.0798i"}}
-%---
-%[output:113a5539]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll3","value":"0.0042 + 0.0798i"}}
-%---
-%[output:16514b04]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll4","value":"0.0042 + 0.1544i"}}
-%---
-%[output:57b19742]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll5","value":"0.0015 + 0.0303i"}}
-%---
-%[output:37256d32]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_s","value":"0.0036 + 0.0328i"}}
-%---
-%[output:04e52470]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll6","value":"0.0000 + 0.0280i"}}
-%---
-%[output:25d26d1d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_s2","value":"0.0021 + 0.0305i"}}
-%---
-%[output:333e4240]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z_ll7","value":"0.0014 + 0.0158i"}}
-%---
-%[output:856686e9]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_homopolar","value":"0.0014 + 0.0158i"}}
-%---
-%[output:0486940b]
-%   data: {"dataType":"matrix","outputData":{"columns":5,"name":"Z_B1","rows":5,"type":"double","value":[["0","0","0","0","0"],["0","0","0","0","0"],["0","0","0","0","0"],["0","0","0","0","0"],["0","0","0","0","0"]]}}
-%---
-%[output:32532c46]
-%   data: {"dataType":"matrix","outputData":{"columns":5,"exponent":"2","name":"Z_B1","rows":5,"type":"complex","value":[["0.0833 - 0.3183i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0995 - 1.0052i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"]]}}
-%---
-%[output:5db6659c]
-%   data: {"dataType":"matrix","outputData":{"columns":5,"exponent":"2","name":"Z_B1","rows":5,"type":"complex","value":[["0.0833 - 0.3183i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0995 - 1.0052i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","3.8549 - 4.8863i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"]]}}
-%---
-%[output:9a967595]
-%   data: {"dataType":"matrix","outputData":{"columns":5,"exponent":"2","name":"Z_B1","rows":5,"type":"complex","value":[["0.0833 - 0.3183i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0995 - 1.0052i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","3.8549 - 4.8863i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","1.9407 - 2.6876i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"]]}}
-%---
-%[output:4364440b]
-%   data: {"dataType":"matrix","outputData":{"columns":5,"name":"Z_fault_B1","rows":5,"type":"complex","value":[["0.0112 + 0.1038i","0.0035 + 0.0744i","0.0021 + 0.0585i","0.0031 + 0.0598i","0.0032 + 0.0598i"],["0.0035 + 0.0744i","0.0035 + 0.0744i","0.0021 + 0.0585i","0.0031 + 0.0598i","0.0032 + 0.0598i"],["0.0021 + 0.0585i","0.0021 + 0.0585i","0.0021 + 0.0585i","0.0021 + 0.0585i","0.0021 + 0.0585i"],["0.0031 + 0.0598i","0.0031 + 0.0598i","0.0021 + 0.0585i","0.0040 + 0.0610i","0.0022 + 0.0586i"],["0.0032 + 0.0598i","0.0032 + 0.0598i","0.0021 + 0.0585i","0.0022 + 0.0586i","0.0040 + 0.0610i"]]}}
-%---
-%[output:301e4e7d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0035 + 0.0744i"}}
-%---
-%[output:2c3b1f44]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0125 + 0.1683i"}}
-%---
-%[output:9fad2ad7]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z3","value":"-0.0226 + 0.0123i"}}
-%---
-%[output:3705d490]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0257"}}
-%---
-%[output:8123f72a]
-%   data: {"dataType":"text","outputData":{"text":"Fault current going throught the fault point: ","truncated":false}}
-%---
-%[output:3be24a1e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.7633"}}
-%---
-%[output:809ced5b]
-%   data: {"dataType":"text","outputData":{"text":"The equivalent impendance value at the fault location is: ","truncated":false}}
-%---
-%[output:744ad5cf]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0162 + 0.1870i"}}
-%---
-%[output:0f43b92e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0104 + 0.1657i"}}
-%---
-%[output:10c85076]
-%   data: {"dataType":"text","outputData":{"text":"Fault current","truncated":false}}
-%---
-%[output:612c66ec]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.5164"}}
-%---
-%[output:41822cf6]
-%   data: {"dataType":"text","outputData":{"text":"The equivalent impendance value at the fault location is: ","truncated":false}}
-%---
-%[output:1f7e3b0e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.1972 - 0.8895i"}}
-%---
-%[output:383f390c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0104 + 0.1657i"}}
-%---
-%[output:85fed965]
-%   data: {"dataType":"text","outputData":{"text":"Fault current","truncated":false}}
-%---
-%[output:4a7ae750]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.2426"}}
-%---
-%[output:7b369c61]
-%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0313 + 0.3112i"}}
-%---
-%[output:3980b216]
-%   data: {"dataType":"text","outputData":{"text":"Fault current","truncated":false}}
-%---
-%[output:67e0d107]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"3.1975"}}
+%[output:16a0b71a]
+%   data: {"dataType":"matrix","outputData":{"columns":6,"exponent":"3","name":"I_fault_B1","rows":6,"type":"double","value":[["4.3301","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
 %---
