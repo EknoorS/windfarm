@@ -1,5 +1,5 @@
+
 %% Windfarm Short Circuit Analysis - Multi-Path Topology & Power Distribution
-clear; clc;
 
 % 1. Symbolen voor onbekenden (Grid & Compensatie)
 syms S_sc_onshore L_shore L_substation Z_turbine S_grid ST1 ST2 ST3 ST4 ST5
@@ -467,17 +467,20 @@ Z_fault_3f_e(16, 2) = Z_fault_3f_e(2, 16);
 Z_fault_3f_e(3, 16) = -(1/ZLe1_2_pu);
 Z_fault_3f_e(16, 3) = Z_fault_3f_e(3, 16);
 
+%Calculate the fault equivalent impendance at the point of fault
 Z_fault2 = Z_fault_3f_e \ eye(size(Z_fault_3f_e)); %[output:5d46006d]
+
 fprintf("The grid fault impendance at the point 16 is:") %[output:245dfc12]
 Z_fault2(16, 16) %[output:913c1e5d]
-I_fault_grid = abs(1/Z_fault2(16, 16)) %[output:11b1f05d]
-I_fault_grid*(100e6/(sqrt(3)*380)) %[output:849d6518]
+
+I_fault_grid_pu = abs(1/Z_fault2(16, 16)) %[output:11b1f05d]
+I_fault_grid_pu*(100e6/(sqrt(3)*380)) %[output:849d6518]
 %From B1 source
-I_fault_b1 =  I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:842ba239]
-I_fault_b2 = I_base_66kv*(3936.479 / I_base_66kv)*1.1
-I_fault_a38a = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
-I_fault_a38b = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
-I_fault_37 = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu))))
+I_fault_b1 =  I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:76651de7]
+I_fault_b2 = I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:4cdbb90d]
+I_fault_a38a = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8948f3db]
+I_fault_a38b = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8348d3a2]
+I_fault_37 = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8ccd0509]
 %%
 %[text] ## Single phase to Earth fault calculation 
 %Fault at feeder B1, %%error the fault point is after the delta connection,
@@ -1029,8 +1032,20 @@ abs(1 / (z1))
 %[output:849d6518]
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"9.0042e+05"}}
 %---
-%[output:842ba239]
-%   data: {"dataType":"error","outputData":{"errorType":"runtime","text":"Unrecognized function or variable 'I_base_66kv'."}}
+%[output:76651de7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1","value":"4.3301e+03"}}
+%---
+%[output:4cdbb90d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2","value":"4.3301e+03"}}
+%---
+%[output:8948f3db]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_a38a","value":"2.0979e+03"}}
+%---
+%[output:8348d3a2]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_a38b","value":"2.0979e+03"}}
+%---
+%[output:8ccd0509]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_37","value":"2.0979e+03"}}
 %---
 %[output:6fb1238b]
 %   data: {"dataType":"matrix","outputData":{"columns":6,"name":"I_fault_B1","rows":6,"type":"double","value":[["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
