@@ -61,26 +61,14 @@ C0_Le_3 = C1_Le_3;
 
 %% ONSHORE 
 
-R1_Le_ON = 0.1;              % ohm/km
-X1_Le_ON = 0.1225;           % ohm/km
-R0_Le_ON = R1_Le_ON;          % assumed
-X0_Le_ON = 3 * X1_Le_ON;      % ohm/km
+R1_Le_ON = 0.0209;      % ohm/km
+R0_Le_ON = 0.3030;      % ohm/km
 
+L1_Le_ON = 0.8467e-3;   % H/km
+L0_Le_ON = 3.1544e-3;   % H/km
 
-L1_Le_ON = X1_Le_ON / w;
-L0_Le_ON = X0_Le_ON / w;
-
-C1_Le_ON = 0.42e-6;   % F/km
-C1_Le_ON = 0.42e-6;   % F/km
-C1_Le_ON = 0.42e-6;   % F/km
-
-
-C0_Le_ON = C1_Le_ON;   % approximation
-C0_Le_ON = C1_Le_ON;
-C0_Le_ON = C1_Le_ON;
-
-
-
+C1_Le_ON = 0.0137e-6;   % F/km
+C0_Le_ON = 0.0084e-6;   % F/km
 
 %% =====================================================
 % TRANSFORMERS (66 kV side)
