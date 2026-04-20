@@ -481,6 +481,16 @@ I_fault_b2 = I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:4cdbb90d]
 I_fault_a38a = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8948f3db]
 I_fault_a38b = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8348d3a2]
 I_fault_37 = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8ccd0509]
+
+%%
+%[text] ## 3 Phase short at the feeder busbar B1
+I_fault_B1 = abs(1.1*450e6/(sqrt(3)*66e3)) %[output:000423aa]
+I_fault_B2 = abs(1.1*450e6/(sqrt(3)*66e3)) %[output:6ea01538]
+I_fault_A38a = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:46288c91]
+I_fault_A38b = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:98595851]
+I_fault_A37 =  abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:6bc3e807]
+I_fault_grid = abs(Sbase/Ubase2 * 1 / Z_fault2(11, 11)) %[output:1440f525]
+I_fault_B1 + I_fault_B2 + I_fault_A38a + I_fault_A38b + I_fault_A37 + I_fault_grid                                                                       v                             %[output:3429cf3f]
 %%
 %[text] ## Single phase to Earth fault calculation 
 %Fault at feeder B1, %%error the fault point is after the delta connection,
@@ -1046,6 +1056,27 @@ abs(1 / (z1))
 %---
 %[output:8ccd0509]
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_37","value":"2.0979e+03"}}
+%---
+%[output:000423aa]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1","value":"4.3301e+03"}}
+%---
+%[output:6ea01538]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2","value":"4.3301e+03"}}
+%---
+%[output:46288c91]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A38a","value":"1.8465e+03"}}
+%---
+%[output:98595851]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A38b","value":"1.8465e+03"}}
+%---
+%[output:6bc3e807]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A37","value":"1.8465e+03"}}
+%---
+%[output:1440f525]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid","value":"7.6252e+03"}}
+%---
+%[output:3429cf3f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"2.1825e+04"}}
 %---
 %[output:6fb1238b]
 %   data: {"dataType":"matrix","outputData":{"columns":6,"name":"I_fault_B1","rows":6,"type":"double","value":[["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
