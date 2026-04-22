@@ -32,42 +32,64 @@ X0_X1_grid_ratio = 4 %[output:3eb6d533]
 Z0_grid_pu = Z_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
 
 %%\
-
-ST1 = 600e6 %[output:24baec0a]
-ST2 = ST1 %[output:881934c8]
-ST3 = 450e6 %[output:8c903fb5]
-ST4 = 450e6 %[output:0a257361]
-ST5 = 225e6 %[output:49622d72]
-ST6 = 1000e6
+S_T_B1 = 600e6; %[output:24baec0a]
+S_T_B2 = S_T_B1; %[output:881934c8]
+S_T_A = 900e6; %[output:881934c8]
+S_T_Btb1 = 450e6;
+S_T_Btb2 = S_T_Btb1;
+% ST3 = 450e6 %[output:8c903fb5]
+% ST4 = 450e6 %[output:0a257361]
+% ST5 = 225e6 %[output:49622d72]
+S_T_shore = 1000e6
+U_690 = 690;
 U_66kv = 66e3; %[output:90442a2c]
 U_220kV = 220e3;
 U_380kV = 380e3; %[output:4ccd0c98]
 % Z_grid = ((380e3)^2/S_grid)*(Sbase/Ubase^2)
 
 % Transfo 
-uk_trafo = 0.14;             % Kortsluitspanning trafo (14%)
-ZTB1 = uk_trafo*(U_66kv^2/ST1)*j %[output:5f0e66e1]
-ZTB2 = uk_trafo* (U_66kv^2/ST2)*j %[output:50432b69]
-ZTA38a = uk_trafo* (U_66kv^2/ST3)*j %[output:984046ea]
-ZTA38b = uk_trafo*(U_66kv^2/ST4)*j %[output:8806d3bb]
-ZTA37 = uk_trafo* (U_66kv^2/ST5)*j %[output:02ac021b]
-ZTB3 = uk_trafo*(U_220kV / ST6)*j
+uk_trafo_transport = 0.14;             % Kortsluitspanning trafo (14%)
+ZTB1 = uk_trafo_transport*(U_66kv^2/S_T_B1)*j %[output:5f0e66e1]
+ZTB2 = uk_trafo_transport* (U_66kv^2/S_T_B2)*j %[output:50432b69]
+% ZTA38a = uk_trafo* (U_66kv^2/ST3)*j %[output:984046ea]
+% ZTA38b = uk_trafo*(U_66kv^2/ST4)*j %[output:8806d3bb]
+% ZTA37 = uk_trafo* (U_66kv^2/ST5)*j %[output:02ac021b]
+ZTB_shore = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
+ZTA_shore = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
+ZTA = uk_trafo_transport*(U_66kv^2 / S_T_A)*j;
 
-ZTB1_pu = ZTB1*( Sbase/Ubase2^2 )  %[output:6111e463]
-ZTB2_pu = ZTB2*( Sbase/Ubase2^2 )   %[output:406676ac]
-ZTA38a_pu = ZTA38a*( Sbase/Ubase2^2 )  %[output:0e36b99a]
-ZTA38b_pu = ZTA38b*( Sbase/Ubase2^2 )  %[output:32b0c49c]
-ZTA37_pu = ZTA37*( Sbase/Ubase2^2 ) %[output:1621f991]
+uk_trafo_turbine = 0.025;
+Z_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1)
+Z_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2)
+
+
+ZTB1_pu = ZTB1*( Sbase/U_66kv^2 )  %[output:6111e463]
+ZTB2_pu = ZTB2*( Sbase/U_66kv^2 )   %[output:406676ac]
+ZTB_shore_pu = ZTB3*( Sbase/U_380kV^2)
+
+Z_T_Btb1_pu = Z_T_Btb1*(Sbase / U_66kv^2)
+Z_T_Btb2_pu = Z_T_Btb2*(Sbase / U_66kv^2)
+
+ZTA_shore_pu = ZTA_shore*( Sbase/U_380kV^2)
+
+% ZTA38a_pu = ZTA38a*( Sbase/Ubase2^2 )  %[output:0e36b99a]
+% ZTA38b_pu = ZTA38b*( Sbase/Ubase2^2 )  %[output:32b0c49c]
+% ZTA37_pu = ZTA37*( Sbase/Ubase2^2 ) %[output:1621f991]
 
 %Transformer zero sequence parameter
 X0_X1_T_ratio = 2.4 %[output:0499a215]
 
 Z0_TB1_pu = ZTB1_pu* X0_X1_T_ratio %[output:9a6ca00e]
 Z0_TB2_pu = ZTB2_pu* X0_X1_T_ratio %[output:72a7a891]
-Z0_TA38a_pu = ZTA38a_pu* X0_X1_T_ratio %[output:7e5f9e24]
-Z0_TA38b_pu = ZTA38b_pu* X0_X1_T_ratio %[output:87c18141]
-Z0_TA37_pu = ZTA37_pu* X0_X1_T_ratio %[output:02197d08]
+% Z0_TA38a_pu = ZTA38a_pu* X0_X1_T_ratio %[output:7e5f9e24]
+% Z0_TA38b_pu = ZTA38b_pu* X0_X1_T_ratio %[output:87c18141]
+% Z0_TA37_pu = ZTA37_pu* X0_X1_T_ratio %[output:02197d08]
 
+Z0_TB_shore_pu = ZTB_shore_pu* X0_X1_T_ratio
+Z0_TA_pu = ZTA_pu* X0_X1_T_ratio
+
+Z0_T_Btb1_pu = Z_T_Btb1_pu* X0_X1_T_ratio;
+Z0_T_Btb2_pu = Z_T_Btb2_pu* X0_X1_T_ratio;
 % Export Cables 
 length = 60 %The export cable length is 60km %[output:2cbaa86d]
 R_km = 0.1  %Ohm/km %[output:30a79469]
@@ -151,17 +173,17 @@ ZfLA37_pu = ZfLA37 * (Sbase / Ubase2^2) %[output:2c66f961]
 
 %Current source parallel impedance
 
-Z_sB1 = U_66kv^2 / (P_B1*10^6) %[output:451d89e0]
-Z_sB2 = U_66kv^2 / (P_B2*10^6) %[output:90949ce3]
-Z_sA38a = U_66kv^2 / (P_A38a*10^6) %[output:094255b7]
-Z_sA38b = U_66kv^2 / (P_A38b*10^6) %[output:8baf6cc8]
-Z_sA37 = U_66kv^2 / (P_A37*10^6) %[output:789aca9e]
+% Z_sB1 = U_66kv^2 / (P_B1*10^6) %[output:451d89e0]
+% Z_sB2 = U_66kv^2 / (P_B2*10^6) %[output:90949ce3]
+% Z_sA38a = U_66kv^2 / (P_A38a*10^6) %[output:094255b7]
+% Z_sA38b = U_66kv^2 / (P_A38b*10^6) %[output:8baf6cc8]
+% Z_sA37 = U_66kv^2 / (P_A37*10^6) %[output:789aca9e]
 
-Z_sB1_pu = Z_sB1 * (Sbase / Ubase2^2) %[output:525045e0]
-Z_sB2_pu = Z_sB2 * (Sbase / Ubase2^2) %[output:964ad76e]
-Z_sA38a_pu = Z_sA38a * (Sbase / Ubase2^2) %[output:36c59655]
-Z_sA38b_pu = Z_sA38b * (Sbase / Ubase2^2) %[output:52fb70a7]
-Z_sA37_pu = Z_sA37 * (Sbase / Ubase2^2) %[output:4cb70c82]
+% Z_sB1_pu = Z_sB1 * (Sbase / Ubase2^2) %[output:525045e0]
+% Z_sB2_pu = Z_sB2 * (Sbase / Ubase2^2) %[output:964ad76e]
+% Z_sA38a_pu = Z_sA38a * (Sbase / Ubase2^2) %[output:36c59655]
+% Z_sA38b_pu = Z_sA38b * (Sbase / Ubase2^2) %[output:52fb70a7]
+% Z_sA37_pu = Z_sA37 * (Sbase / Ubase2^2) %[output:4cb70c82]
 
 %%Phase to ground fault situation
 %On feeder B1;
@@ -493,7 +515,7 @@ I_fault_A38a = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_O
 I_fault_A38b = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:98595851]
 I_fault_A37 =  abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:6bc3e807]
 I_fault_grid = abs(Sbase/Ubase2 * 1 / Z_fault2(11, 11)) %[output:1440f525]
-I_fault_B1 + I_fault_B2 + I_fault_A38a + I_fault_A38b + I_fault_A37 + I_fault_grid                                                                       v                             %[output:3429cf3f]
+I_fault_B1 + I_fault_B2 + I_fault_A38a + I_fault_A38b + I_fault_A37 + I_fault_grid                                                                                                    %[output:3429cf3f]
 %%
 %[text] ## Single phase to Earth fault calculation 
 %Fault at feeder B1, %%error the fault point is after the delta connection,
