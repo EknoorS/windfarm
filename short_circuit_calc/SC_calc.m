@@ -49,47 +49,50 @@ U_380kV = 380e3; %[output:4ccd0c98]
 
 % Transfo 
 uk_trafo_transport = 0.14;             % Kortsluitspanning trafo (14%)
-ZTB1 = uk_trafo_transport*(U_66kv^2/S_T_B1)*j %[output:5f0e66e1]
-ZTB2 = uk_trafo_transport* (U_66kv^2/S_T_B2)*j %[output:50432b69]
+X0_X1_T_ratio = 2.4 %[output:0499a215]
+
+Z1_TB1 = uk_trafo_transport*(U_66kv^2/S_T_B1)*j %[output:5f0e66e1]
+Z1_TB2 = uk_trafo_transport* (U_66kv^2/S_T_B2)*j %[output:50432b69]
 % ZTA38a = uk_trafo* (U_66kv^2/ST3)*j %[output:984046ea]
 % ZTA38b = uk_trafo*(U_66kv^2/ST4)*j %[output:8806d3bb]
 % ZTA37 = uk_trafo* (U_66kv^2/ST5)*j %[output:02ac021b]
-ZTB_shore = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
-ZTA_shore = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
-ZTA = uk_trafo_transport*(U_66kv^2 / S_T_A)*j;
+Z1_TB3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
+Z1_TA3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
+Z1_TA = uk_trafo_transport*(U_66kv^2 / S_T_A)*j;
 
 uk_trafo_turbine = 0.025;
-Z_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1)
-Z_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2)
+Z1_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1)
+Z1_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2)
+Z1_T_Atb = uk_trafo_turbine*(U_66kv^2 / S_T_A)
 
 
-ZTB1_pu = ZTB1*( Sbase/U_66kv^2 )  %[output:6111e463]
-ZTB2_pu = ZTB2*( Sbase/U_66kv^2 )   %[output:406676ac]
-ZTB_shore_pu = ZTB3*( Sbase/U_380kV^2)
+Z1_TB1_pu = Z1_TB1*( Sbase/U_66kv^2 )  %[output:6111e463]
+Z0_TB1_pu = Z1_TB1_pu* X0_X1_T_ratio %[output:9a6ca00e]
 
-Z_T_Btb1_pu = Z_T_Btb1*(Sbase / U_66kv^2)
-Z_T_Btb2_pu = Z_T_Btb2*(Sbase / U_66kv^2)
+Z1_TB2_pu = Z1_TB2*( Sbase/U_66kv^2 )   %[output:406676ac]
+Z0_TB2_pu = Z1_TB2_pu* X0_X1_T_ratio %[output:72a7a891]
 
-ZTA_shore_pu = ZTA_shore*( Sbase/U_380kV^2)
+Z1_TB3_pu = ZTB3*( Sbase/U_380kV^2)
+Z0_TB3_pu = Z1_TB3_pu*X0_X1_T_ratio
 
-% ZTA38a_pu = ZTA38a*( Sbase/Ubase2^2 )  %[output:0e36b99a]
-% ZTA38b_pu = ZTA38b*( Sbase/Ubase2^2 )  %[output:32b0c49c]
-% ZTA37_pu = ZTA37*( Sbase/Ubase2^2 ) %[output:1621f991]
+Z1_T_Btb1_pu = Z1_T_Btb1*(Sbase / U_66kv^2)
+Z0_T_Btb1_pu = Z1_T_Btb1_pu* X0_X1_T_ratio;
 
-%Transformer zero sequence parameter
-X0_X1_T_ratio = 2.4 %[output:0499a215]
+Z1_T_Btb2_pu = Z1_T_Btb2*(Sbase / U_66kv^2)
+Z0_T_Btb2_pu = Z1_T_Btb2_pu* X0_X1_T_ratio;
 
-Z0_TB1_pu = ZTB1_pu* X0_X1_T_ratio %[output:9a6ca00e]
-Z0_TB2_pu = ZTB2_pu* X0_X1_T_ratio %[output:72a7a891]
-% Z0_TA38a_pu = ZTA38a_pu* X0_X1_T_ratio %[output:7e5f9e24]
-% Z0_TA38b_pu = ZTA38b_pu* X0_X1_T_ratio %[output:87c18141]
-% Z0_TA37_pu = ZTA37_pu* X0_X1_T_ratio %[output:02197d08]
+Z1_TA_pu = Z1_TA* ( Sbase/U_66kv^2)
+Z0_TA_pu = Z1_TA_pu* X0_X1_T_ratio
 
-Z0_TB_shore_pu = ZTB_shore_pu* X0_X1_T_ratio
-Z0_TA_pu = ZTA_pu* X0_X1_T_ratio
+Z1_TA3_pu = Z1_TA3*( Sbase/U_380kV^2)
+Z0_TA3_pu = Z1_TA3_pu* X0_X1_T_ratio
 
-Z0_T_Btb1_pu = Z_T_Btb1_pu* X0_X1_T_ratio;
-Z0_T_Btb2_pu = Z_T_Btb2_pu* X0_X1_T_ratio;
+Z1_T_Atb_pu = Z1_T_Atb*( Sbase/U_66kv^2)
+Z0_T_Atb_pu = Z1_T_Atb_pu*X0_X1_T_ratio
+
+%Grounding transformer
+Z0_ground = j*1 %the impedance of this ground transformer is very low.
+
 % Export Cables 
 length = 60 %The export cable length is 60km %[output:2cbaa86d]
 % R_km = 0.1  %Ohm/km %[output:30a79469]
