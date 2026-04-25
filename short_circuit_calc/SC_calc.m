@@ -160,44 +160,36 @@ Z0_ON_B_pu = Z0_ON_B * (Sbase / Ubase^2) %[output:535c4548]
 Z1_ON_A_pu = Z1_ON_A * (Sbase / Ubase^2) %[output:93fbbe05]
 Z0_ON_A_pu = Z0_ON_A * (Sbase / Ubase^2) %[output:535c4548]
 
-%%Feeder cables
-% ZLf4 = 1 * (Sbase/Ubase2^2)
-% ZL5 = 1 * (Sbase/Ubase2^2)
-% ZL6 = 1 * (Sbase/Ubase2^2)
-% ZL7 = 1 * (Sbase/Ubase2^2)
-% ZL8 = 1 * (Sbase/Ubase2^2)
 
 %Feeder line zero sequence impedance
-X0_X1_L_ratio = 3 %[output:3dca68af]
-
-
-%% --- SYSTEEM PARAMETERS & VERMOGENS --- w
-V_66 = 66000;                % Offshore spanning [V]
-V_380 = 380000;              % Onshore spanning [V]
-
-% Vermogensverdeling per Zone [MW]
-P_B1  = 450;                 %
-P_B2  = 450; 
-P_A38a = 225;                 % Zone 3.8 MW
-P_A38b = 225; 
-P_A37 = 225;                 % Zone 3.7 MW
+X0_X1_L_ratio = 1.5 %[output:3dca68af]
 
 %%Feeder equivalent parallel impedance
-ZfLB1 = 0.244686 + j*0.153423 %[output:5710454c]
-ZfLB2 = 0.20829138 + j*0.13060804 %[output:3bbeb79e]
-ZfLA38a = 0.3514672 + j*0.220373 %[output:5ade169b]
-ZfLA38b = 0.408561332 + j*0.2561899 %[output:24a51edb]
-ZfLA37 = 0.43514837 + j*0.27285307 %[output:1a1f8217]
+Z1_fLB1 = 0.244686 + j*0.153423 %[output:5710454c]
+Z1_fLB2 = 0.20829138 + j*0.13060804 %[output:3bbeb79e]
+Z1_fLA38a = 0.3514672 + j*0.220373 %[output:5ade169b]
+Z1_fLA38b = 0.408561332 + j*0.2561899 %[output:24a51edb]
+Z1_fLA37 = 0.43514837 + j*0.27285307 %[output:1a1f8217]
 
 
-ZfLB1_pu = ZfLB1 * (Sbase / Ubase2^2) %[output:6d773145]
-ZfLB2_pu = ZfLB2 * (Sbase / Ubase2^2) %[output:3262f315]
+Z1_fLB1_pu = Z1_fLB1 * (Sbase / Ubase2^2) %[output:6d773145]
+Z0_fLB1_pu = Z1_fLB1_pu*X0_X1_L_ratio
 
-ZfLA38a_pu = ZfLA38a * (Sbase / Ubase2^2) %[output:6d80f36a]
-ZfLA38b_pu = ZfLA38b * (Sbase / Ubase2^2) %[output:5a15c653]
-ZfLA37_pu = ZfLA37 * (Sbase / Ubase2^2) %[output:2c66f961]
+Z1_fLB2_pu = Z1_fLB2 * (Sbase / Ubase2^2) %[output:3262f315]
+Z0_fLB2_pu = Z1_fLB2_pu*X0_X1_L_ratio
 
-ZlfA = (ZfLA38a_pu^-1 + ZfLA38b_pu^-1 + ZfLA37_pu^-1)^-1
+Z1_fLA38a_pu = Z1_fLA38a * (Sbase / Ubase2^2) %[output:6d80f36a]
+Z0_fLA38a_pu = Z1_fLA38a_pu * X0_X1_L_ratio
+
+Z1_fLA38b_pu = Z1_fLA38b * (Sbase / Ubase2^2) %[output:5a15c653]
+Z0_fLA38b_pu = Z1_fLA38b_pu * X0_X1_L_ratio
+
+Z1_fLA37_pu = Z1_fLA37 * (Sbase / Ubase2^2) %[output:2c66f961]
+Z0_fLA37_pu = Z1_fLA37_pu * X0_X1_L_ratio
+
+
+Z1_lfA_pu = (Z1_fLA38a_pu^-1 + Z1_fLA38b_pu^-1 + Z1_fLA37_pu^-1)^-1
+Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio
 
 
 %[appendix]{"version":"1.0"}
