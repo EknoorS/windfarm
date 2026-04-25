@@ -40,7 +40,7 @@ S_T_Btb2 = S_T_Btb1;
 % ST3 = 450e6 %[output:8c903fb5]
 % ST4 = 450e6 %[output:0a257361]
 % ST5 = 225e6 %[output:49622d72]
-S_T_shore = 1000e6
+S_T_shore = 1000e6;
 U_690 = 690;
 U_66kv = 66e3; %[output:90442a2c]
 U_220kV = 220e3;
@@ -92,24 +92,42 @@ Z0_T_Btb1_pu = Z_T_Btb1_pu* X0_X1_T_ratio;
 Z0_T_Btb2_pu = Z_T_Btb2_pu* X0_X1_T_ratio;
 % Export Cables 
 length = 60 %The export cable length is 60km %[output:2cbaa86d]
-R_km = 0.1  %Ohm/km %[output:30a79469]
-C_km = 0.18 %uF/km  %Just mock number, could be different later on %[output:6fe428bf]
-L_km = 0.39 %mH/km %[output:52061116]
+% R_km = 0.1  %Ohm/km %[output:30a79469]
+% L_km = 0.39 %mH/km %[output:52061116]
+% C_km = 0.18 %uF/km  %Just mock number, could be different later on %[output:6fe428bf]
 
-Z_line = R_km*length + j*(omega*L_km*length*10^-3)  %[output:2d75037d]
+% Z_line = R_km*length + j*(omega*L_km*length*10^-3)  %[output:2d75037d]
 
-ZLe1_pu = Z_line * (Sbase/Ubase^2) %[output:424b1f03]
-ZLe1_1_pu = ZLe1_pu/2 %[output:5435ed8d]
-ZLe1_2_pu = ZLe1_pu/2 %[output:6cb383a7]
-ZLe2_pu = Z_line * (Sbase/Ubase^2) %[output:864d84e6]
-ZLe3_pu = Z_line * (Sbase/Ubase^2) %[output:4c0c949c]
+R1_km = 0.0612 %Ohm/km
+Z1_L_km = j*0.1545 %Ohm/km
 
-xo_x1_ratio_submarine = 1 %(could be from 1 to 1.5 because submarine cables have good return path via water and cable sheath) %[output:1d9c9443]
-Z0_Le1_pu = ZLe1_pu * xo_x1_ratio_submarine %[output:65de1136]
-Z0_Le1_1_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:6bb1159d]
-Z0_Le1_2_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:29db49c3]
-Z0_Le2_pu = ZLe2_pu * xo_x1_ratio_submarine %[output:1e768a8f]
-Z0_Le3_pu = ZLe3_pu * xo_x1_ratio_submarine %[output:08d12e67]
+R0_km = 0.1968
+Z0_L_km = j*0.1322
+
+Z1_SM_line = length * (R1_km + Z1_L_km)
+
+Z1_LSM1_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:424b1f03]
+Z1_LSM1a_pu = Z1_LSM1b_pu/2 %[output:5435ed8d]
+Z1_LSM1b_pu = Z1_LSM1b_pu/2 %[output:6cb383a7]
+
+Z1_LSM2_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:864d84e6]
+Z1_LSM3_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:4c0c949c]
+
+% xo_x1_ratio_submarine = 1 %(could be from 1 to 1.5 because submarine cables have good return path via water and cable sheath) %[output:1d9c9443]
+% Z0_Le1_pu = ZLSM1b_pu * xo_x1_ratio_submarine %[output:65de1136]
+% Z0_Le1_1_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:6bb1159d]
+% Z0_Le1_2_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:29db49c3]
+% Z0_Le2_pu = ZLSM2_pu * xo_x1_ratio_submarine %[output:1e768a8f]
+% Z0_Le3_pu = ZLSM3_pu * xo_x1_ratio_submarine %[output:08d12e67]
+
+Z0_SM_line = length * (R0_km + Z0_L_km)
+
+Z0_LSM1_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:424b1f03]
+Z0_LSM1a_pu = Z0_LSM1b_pu/2 %[output:5435ed8d]
+Z0_LSM1b_pu = Z0_LSM1b_pu/2 %[output:6cb383a7]
+
+Z0_LSM2_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:864d84e6]
+Z0_LSM3_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:4c0c949c]
 
 
 %%On shore overhead transmission cables
@@ -127,11 +145,17 @@ length_ON = 150; %km
 comp = 1/(C1_Le_ON*length_ON*100*pi) %[output:0b071e2c]
 (comp / 100*pi) / length_ON %[output:5d520934]
 
-Z1_Le_ON = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:1dceb1ab]
-Z0_Le_ON = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:4ba1a123]
+Z1_ON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:1dceb1ab]
+Z0_ON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:4ba1a123]
 
-Z1_Le_ON_pu = Z1_Le_ON * (Sbase / Ubase^2) %[output:93fbbe05]
-Z0_Le_ON_pu = Z0_Le_ON * (Sbase / Ubase^2) %[output:535c4548]
+Z1_ON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:1dceb1ab]
+Z0_ON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:4ba1a123]
+
+Z1_ON_B_pu = Z1_ON_B * (Sbase / Ubase^2) %[output:93fbbe05]
+Z0_ON_B_pu = Z0_ON_B * (Sbase / Ubase^2) %[output:535c4548]
+
+Z1_ON_A_pu = Z1_ON_A * (Sbase / Ubase^2) %[output:93fbbe05]
+Z0_ON_A_pu = Z0_ON_A * (Sbase / Ubase^2) %[output:535c4548]
 
 %%Feeder cables
 % ZLf4 = 1 * (Sbase/Ubase2^2)
@@ -165,587 +189,13 @@ ZfLA37 = 0.43514837 + j*0.27285307 %[output:1a1f8217]
 
 ZfLB1_pu = ZfLB1 * (Sbase / Ubase2^2) %[output:6d773145]
 ZfLB2_pu = ZfLB2 * (Sbase / Ubase2^2) %[output:3262f315]
+
 ZfLA38a_pu = ZfLA38a * (Sbase / Ubase2^2) %[output:6d80f36a]
 ZfLA38b_pu = ZfLA38b * (Sbase / Ubase2^2) %[output:5a15c653]
 ZfLA37_pu = ZfLA37 * (Sbase / Ubase2^2) %[output:2c66f961]
 
-%%Turbine equivalent current source circuit:
+ZlfA = (ZfLA38a_pu^-1 + ZfLA38b_pu^-1 + ZfLA37_pu^-1)^-1
 
-%Current source parallel impedance
-
-% Z_sB1 = U_66kv^2 / (P_B1*10^6) %[output:451d89e0]
-% Z_sB2 = U_66kv^2 / (P_B2*10^6) %[output:90949ce3]
-% Z_sA38a = U_66kv^2 / (P_A38a*10^6) %[output:094255b7]
-% Z_sA38b = U_66kv^2 / (P_A38b*10^6) %[output:8baf6cc8]
-% Z_sA37 = U_66kv^2 / (P_A37*10^6) %[output:789aca9e]
-
-% Z_sB1_pu = Z_sB1 * (Sbase / Ubase2^2) %[output:525045e0]
-% Z_sB2_pu = Z_sB2 * (Sbase / Ubase2^2) %[output:964ad76e]
-% Z_sA38a_pu = Z_sA38a * (Sbase / Ubase2^2) %[output:36c59655]
-% Z_sA38b_pu = Z_sA38b * (Sbase / Ubase2^2) %[output:52fb70a7]
-% Z_sA37_pu = Z_sA37 * (Sbase / Ubase2^2) %[output:4cb70c82]
-
-%%Phase to ground fault situation
-%On feeder B1;
-
-%Build the admittance matrix
-A = zeros(15, 15);
-
-%Diagonal terms
-A(1,1) = 1 / (Z_grid_pu);
-A(2,2) =  1 / (Z_grid_pu) + 1 / ZLe2_pu + 1 / ZLe3_pu  + 1 / ZLe1_pu;
-A(3,3) =  1 / ZLe1_pu + 1 / ZTB1_pu + 1 / ZTB2_pu;
-A(4,4) =  1 / ZLe2_pu + 1 / ZTA38a_pu + 1 / ZTA38b_pu;
-A(5,5) =  1 / ZLe3_pu + 1 / ZTA37_pu;
-A(6,6) =  1 / ZTB1_pu + 1/ ZfLB1_pu;
-A(7,7) =  1 / ZTB2_pu + 1 / ZfLB2_pu;
-A(8,8) =  1 / ZTA38a_pu + 1 / ZfLA38a_pu;
-A(9,9) =  1 / ZTA38b_pu + 1 / ZfLA38b_pu;
-A(10,10) =  1 / ZTA37_pu + 1 / ZfLA37_pu;
-A(11,11) =  1 / ZfLB1_pu + 1 / Z_sB1_pu;
-A(12,12) =  1 / ZfLB2_pu + 1 / Z_sB2_pu;
-A(13,13) =  1 / ZfLA38a_pu + 1 / Z_sA38a_pu;
-A(14,14) =  1 / ZfLA38b_pu + 1 / Z_sA38b_pu;
-A(15,15) =  1 / ZfLA37_pu + 1 / Z_sA37_pu; 
-   
-%Off-diagonal terms
-A(1, 2) = -(1 / Z_grid_pu);
-A(1, 2) = A(2, 1);
-
-A(2, 3) = -(1 /  ZLe1_pu);
-A(3, 2) = A(2, 3);
-
-A(2, 4) = -(1 / ZLe2_pu);
-A(4, 2) = A(2, 4);
-
-A(2, 5) = -(1 / ZLe3_pu);
-A(5, 2) = A(2, 5);
-
-A(3, 6) = -(1 / ZTB1_pu);
-A(6, 3) = A(3, 6);
-
-A(3, 7) = -(1 / ZTB2_pu);
-A(7, 3) = A(3, 7);
-
-A(4, 8) = -(1 / ZTA38a_pu);
-A(8, 4) = A(4, 8);
-
-A(4, 9) = -(1 / ZTA38b_pu);
-A(9, 4) = A(4, 9);
-
-A(5, 10) = -(1 / ZTA37_pu);
-A(10, 5) = A(5, 10);
-
-A(6, 11) = -(1 / ZfLB1_pu);
-A(11, 6) = A(6, 11);
-
-A(7, 12) = -(1 / ZfLB2_pu);
-A(12, 7) = A(7, 12);
-
-A(8, 13) = -(1 / ZfLA38a_pu);
-A(13, 8) = A(8, 13);
-
-A(9, 14) = -(1 / ZfLA38b_pu);
-A(14, 9) = A(9, 14);
-
-A(10, 15) = -(1 / ZfLA37_pu);
-A(15, 10) = A(10, 15);
-
-A %[output:6f3e8db3]
-
-% Contruct the current injection matrix
-I = zeros(15, 1);
-
-k = 6;
-I(k) = 1; %Inject 1A at node k
-
-V = A \ I;
-
-V(k) %[output:2c8c48e3]
-
-
-%Admittance matrix at the fault condition, remove the current source
-%parallel impedance. 
-%Build the admittance matrix
-A_fault = zeros(15, 15);
-
-% Diagonal terms
-% A_fault(1,1) = 1 / (Z_grid_pu);
-A_fault(1, 1) = eps; %This is to represent the bus 1 is excluded from the admittance matrix
-
-A_fault(2,2) =  1 / (Z_grid_pu + Z1_Le_ON_pu) + 1 / ZLe2_pu + 1 / ZLe3_pu  + 1 / ZLe1_pu;
-A_fault(3,3) =  1 / ZLe1_pu + 1 / ZTB1_pu + 1 / ZTB2_pu;
-A_fault(4,4) =  1 / ZLe2_pu + 1 / ZTA38a_pu + 1 / ZTA38b_pu;
-A_fault(5,5) =  1 / ZLe3_pu + 1 / ZTA37_pu;
-A_fault(6,6) =  1 / ZTB1_pu + 1/ ZfLB1_pu;
-A_fault(7,7) =  1 / ZTB2_pu + 1 / ZfLB2_pu;
-A_fault(8,8) =  1 / ZTA38a_pu + 1 / ZfLA38a_pu;
-A_fault(9,9) =  1 / ZTA38b_pu + 1 / ZfLA38b_pu;
-A_fault(10,10) =  1 / ZTA37_pu + 1 / ZfLA37_pu;
-A_fault(11,11) =  1 / ZfLB1_pu;
-A_fault(12,12) =  1 / ZfLB2_pu;
-A_fault(13,13) =  1 / ZfLA38a_pu;
-A_fault(14,14) =  1 / ZfLA38b_pu;
-A_fault(15,15) =  1 / ZfLA37_pu; 
-
-%Off-diagonal terms
-% A_fault(1, 2) = -(1 / Z_grid_pu);
-% A_fault(2, 1) = A_fault(2, 1);
-
-A_fault(1, 2) = eps;
-A_fault(2, 1) = A_fault(2, 1);
-
-A_fault(2, 3) = -(1 /  ZLe1_pu);
-A_fault(3, 2) = A_fault(2, 3);
-
-A_fault(2, 4) = -(1 / ZLe2_pu);
-A_fault(4, 2) = A_fault(2, 4);
-
-A_fault(2, 5) = -(1 / ZLe3_pu);
-A_fault(5, 2) = A_fault(2, 5);
-
-A_fault(3, 6) = -(1 / ZTB1_pu);
-A_fault(6, 3) = A_fault(3, 6);
-
-A_fault(3, 7) = -(1 / ZTB2_pu);
-A_fault(7, 3) = A_fault(3, 7);
-
-A_fault(4, 8) = -(1 / ZTA38a_pu);
-A_fault(8, 4) = A_fault(4, 8);
-
-A_fault(4, 9) = -(1 / ZTA38b_pu);
-A_fault(9, 4) = A_fault(4, 9);
-
-A_fault(5, 10) = -(1 / ZTA37_pu);
-A_fault(10, 5) = A_fault(5, 10);
-
-A_fault(6, 11) = -(1 / ZfLB1_pu);
-A_fault(11, 6) = A_fault(6, 11);
-
-A_fault(7, 12) = -(1 / ZfLB2_pu);
-A_fault(12, 7) = A_fault(7, 12);
-
-A_fault(8, 13) = -(1 / ZfLA38a_pu);
-A_fault(13, 8) = A_fault(8, 13);
-
-A_fault(9, 14) = -(1 / ZfLA38b_pu);
-A_fault(14, 9) = A_fault(9, 14);
-
-A_fault(10, 15) = -(1 / ZfLA37_pu);
-A_fault(15, 10) = A_fault(10, 15);
-
-% A_fault = zeros(14, 14) %Test removing bus 1 to make it a ground
-% connection point.
-% 
-%Diagonal terms
-
-% A_fault(1,1) =  1 / (Z_grid_pu) + 1 / ZLe2_pu + 1 / ZLe3_pu  + 1 / ZLe1_pu;
-% A_fault(2,2) =  1 / ZLe1_pu + 1 / ZTB1_pu + 1 / ZTB2_pu;
-% A_fault(3,3) =  1 / ZLe2_pu + 1 / ZTA38a_pu + 1 / ZTA38b_pu;
-% A_fault(4,4) =  1 / ZLe3_pu + 1 / ZTA37_pu;
-% A_fault(5,5) =  1 / ZTB1_pu + 1/ ZfLB1_pu;
-% A_fault(6,6) =  1 / ZTB2_pu + 1 / ZfLB2_pu;
-% A_fault(7,7) =  1 / ZTA38a_pu + 1 / ZfLA38a_pu;
-% A_fault(8,8) =  1 / ZTA38b_pu + 1 / ZfLA38b_pu;
-% A_fault(9,9) =  1 / ZTA37_pu + 1 / ZfLA37_pu;
-% A_fault(10,10) =  1 / ZfLB1_pu;
-% A_fault(11,11) =  1 / ZfLB2_pu;
-% A_fault(12,12) =  1 / ZfLA38a_pu;
-% A_fault(13,13) =  1 / ZfLA38b_pu;
-% A_fault(14,14) =  1 / ZfLA37_pu; 
-% 
-% %Off-diagonal terms
-% 
-% A_fault(1, 2) = -(1 /  ZLe1_pu);
-% A_fault(2, 1) = A_fault(1, 2);
-% 
-% A_fault(1, 3) = -(1 / ZLe2_pu);
-% A_fault(3, 1) = A_fault(1, 3);
-% 
-% A_fault(1, 4) = -(1 / ZLe3_pu);
-% A_fault(4, 1) = A_fault(1, 4);
-% 
-% A_fault(2, 5) = -(1 / ZTB1_pu);
-% A_fault(5, 2) = A_fault(2, 5);
-% 
-% A_fault(2, 6) = -(1 / ZTB2_pu);
-% A_fault(6, 2) = A_fault(2, 6);
-% 
-% A_fault(3, 7) = -(1 / ZTA38a_pu);
-% A_fault(7, 3) = A_fault(3, 7);
-% 
-% A_fault(3, 8) = -(1 / ZTA38b_pu);
-% A_fault(8, 3) = A_fault(3, 8);
-% 
-% A_fault(4, 9) = -(1 / ZTA37_pu);
-% A_fault(9, 4) = A_fault(4, 9);
-% 
-% A_fault(5, 10) = -(1 / ZfLB1_pu);
-% A_fault(10, 5) = A_fault(5, 10);
-% 
-% A_fault(6, 11) = -(1 / ZfLB2_pu);
-% A_fault(11, 6) = A_fault(6, 11);
-% 
-% A_fault(7, 12) = -(1 / ZfLA38a_pu);
-% A_fault(12, 7) = A_fault(7, 12);
-% 
-% A_fault(8, 13) = -(1 / ZfLA38b_pu);
-% A_fault(13, 8) = A_fault(8, 13);
-% 
-% A_fault(9, 14) = -(1 / ZfLA37_pu);
-% A_fault(14, 9) = A_fault(9, 14);
-
-
-% Contruct the current injection matrix
-I = zeros(15, 1);
-
-k = 11;
-% I(2) = -1;
-I(2) = 1;
-
-
-V = A_fault \ I %[output:13cb3dfd] %[output:031b3826]
-% (V(11) - V(1))*(A_fault(6, 11) + A_fault(3, 6))
-abs((V(1) - V(2)) / (Z_grid_pu)) %[output:27322763]
-
-V(9) %[output:354023d0]
-
-%The correct number for the equivalent impendance seen from bus 11
-fprintf("Hand calculate the impendace from bus 11 to GND:") %[output:8bc5d837]
-ZfLB1_pu + ZTB1_pu + ZLe1_pu + Z_grid_pu %[output:34353223]
-
-Z_fault2 = A_fault \ eye(size(A_fault)); %[output:33ec8d23]
-fprintf("B1 3 phase fault equivalent extracted via the Z impedance bus:") %[output:3633aef0]
-Z_fault2(11, 11) %[output:49375457]
-fprintf("Fault current from bus 11 (pu)") %[output:9a8e204c]
-1 / Z_fault2(11, 11) %[output:04842961]
-fprintf("Fault current from bus 11: ") %[output:5495ea02]
-abs(Sbase/Ubase2 * 1 / Z_fault2(11, 11)) %[output:9aa24e57]
-
-I_fault2 = A_fault * V %[output:41d99e86]
-
-S_bus = V .* I %[output:76bbb151]
-
-%%
-%[text] ## 3 phase short at the export cable
-Z_fault_3f_e = zeros(16, 16) %[output:2e021f91]
-
-Z_fault_3f_e(1,1) = eps;
-Z_fault_3f_e(2,2) =  1 / (Z_grid_pu + Z1_Le_ON_pu) + 1 / ZLe2_pu + 1 / ZLe3_pu  + 1/ZLe1_1_pu;
-Z_fault_3f_e(3,3) =  1/ZLe1_2_pu + 1 / ZTB1_pu + 1 / ZTB2_pu;
-Z_fault_3f_e(4,4) =  1 / ZLe2_pu + 1 / ZTA38a_pu + 1 / ZTA38b_pu;
-Z_fault_3f_e(5,5) =  1 / ZLe3_pu + 1 / ZTA37_pu;
-Z_fault_3f_e(6,6) =  1 / ZTB1_pu + 1/ ZfLB1_pu;
-Z_fault_3f_e(7,7) =  1 / ZTB2_pu + 1 / ZfLB2_pu;
-Z_fault_3f_e(8,8) =  1 / ZTA38a_pu + 1 / ZfLA38a_pu;
-Z_fault_3f_e(9,9) =  1 / ZTA38b_pu + 1 / ZfLA38b_pu;
-Z_fault_3f_e(10,10) =  1 / ZTA37_pu + 1 / ZfLA37_pu;
-Z_fault_3f_e(11,11) =  1 / ZfLB1_pu;
-Z_fault_3f_e(12,12) =  1 / ZfLB2_pu;
-Z_fault_3f_e(13,13) =  1 / ZfLA38a_pu;
-Z_fault_3f_e(14,14) =  1 / ZfLA38b_pu;
-Z_fault_3f_e(15,15) =  1 / ZfLA37_pu; 
-Z_fault_3f_e(16,16) =  1/ZLe1_1_pu + 1/ZLe1_2_pu;
-
-Z_fault_3f_e(1, 2) = eps;
-Z_fault_3f_e(2, 1) = Z_fault_3f_e(2, 1);
-
-Z_fault_3f_e(2, 4) = -(1 / ZLe2_pu);
-Z_fault_3f_e(4, 2) = Z_fault_3f_e(2, 4);
-
-Z_fault_3f_e(2, 5) = -(1 / ZLe3_pu);
-Z_fault_3f_e(5, 2) = Z_fault_3f_e(2, 5);
-
-Z_fault_3f_e(3, 6) = -(1 / ZTB1_pu);
-Z_fault_3f_e(6, 3) = Z_fault_3f_e(3, 6);
-
-Z_fault_3f_e(3, 7) = -(1 / ZTB2_pu);
-Z_fault_3f_e(7, 3) = Z_fault_3f_e(3, 7);
-
-Z_fault_3f_e(4, 8) = -(1 / ZTA38a_pu);
-Z_fault_3f_e(8, 4) = Z_fault_3f_e(4, 8);
-
-Z_fault_3f_e(4, 9) = -(1 / ZTA38b_pu);
-Z_fault_3f_e(9, 4) = Z_fault_3f_e(4, 9);
-
-Z_fault_3f_e(5, 10) = -(1 / ZTA37_pu);
-Z_fault_3f_e(10, 5) = Z_fault_3f_e(5, 10);
-
-Z_fault_3f_e(6, 11) = -(1 / ZfLB1_pu);
-Z_fault_3f_e(11, 6) = Z_fault_3f_e(6, 11);
-
-Z_fault_3f_e(7, 12) = -(1 / ZfLB2_pu);
-Z_fault_3f_e(12, 7) = Z_fault_3f_e(7, 12);
-
-Z_fault_3f_e(8, 13) = -(1 / ZfLA38a_pu);
-Z_fault_3f_e(13, 8) = Z_fault_3f_e(8, 13);
-
-Z_fault_3f_e(9, 14) = -(1 / ZfLA38b_pu);
-Z_fault_3f_e(14, 9) = Z_fault_3f_e(9, 14);
-
-Z_fault_3f_e(10, 15) = -(1 / ZfLA37_pu);
-Z_fault_3f_e(15, 10) = Z_fault_3f_e(10, 15);
-
-Z_fault_3f_e(2, 16) = -(1/ZLe1_1_pu);
-Z_fault_3f_e(16, 2) = Z_fault_3f_e(2, 16);
-
-Z_fault_3f_e(3, 16) = -(1/ZLe1_2_pu);
-Z_fault_3f_e(16, 3) = Z_fault_3f_e(3, 16);
-
-%Calculate the fault equivalent impendance at the point of fault
-Z_fault2 = Z_fault_3f_e \ eye(size(Z_fault_3f_e)); %[output:5d46006d]
-
-fprintf("The grid fault impendance at the point 16 is:") %[output:245dfc12]
-Z_fault2(16, 16) %[output:913c1e5d]
-
-I_fault_grid_pu = abs(1/Z_fault2(16, 16)) %[output:11b1f05d]
-I_fault_grid_pu*(100e6/(sqrt(3)*380)) %[output:849d6518]
-%From B1 source
-I_fault_b1 =  I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:76651de7]
-I_fault_b2 = I_base_66kv*(3936.479 / I_base_66kv)*1.1 %[output:4cdbb90d]
-I_fault_a38a = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8948f3db]
-I_fault_a38b = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8348d3a2]
-I_fault_37 = I_base_66kv*(1968.2 / I_base_66kv)*abs(1.1*((Z1_Le_ON_pu + Z_grid_pu / (Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu)))) %[output:8ccd0509]
-
-%%
-%[text] ## 3 Phase short at the feeder busbar B1
-I_fault_B1 = abs(1.1*450e6/(sqrt(3)*66e3)) %[output:000423aa]
-I_fault_B2 = abs(1.1*450e6/(sqrt(3)*66e3)) %[output:6ea01538]
-I_fault_A38a = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:46288c91]
-I_fault_A38b = abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:98595851]
-I_fault_A37 =  abs((1.1*225e6/(sqrt(3)*66e3))*(Z1_Le_ON_pu + Z_grid_pu)/(Z1_Le_ON_pu + Z_grid_pu + ZLe1_pu + ZTB1_pu)) %[output:6bc3e807]
-I_fault_grid = abs(Sbase/Ubase2 * 1 / Z_fault2(11, 11)) %[output:1440f525]
-I_fault_B1 + I_fault_B2 + I_fault_A38a + I_fault_A38b + I_fault_A37 + I_fault_grid                                                                                                    %[output:3429cf3f]
-%%
-%[text] ## Single phase to Earth fault calculation 
-%Fault at feeder B1, %%error the fault point is after the delta connection,
-%therefore there is not a return path via earth path!
-I_fault_B1 = zeros(6, 6) %[output:6fb1238b]
-I_base_66kv = Sbase / U_66kv %[output:2d893d2a]
-
-I_fault_B1(1, 1) = I_base_66kv*(3936.479 / I_base_66kv)*1.1;
-
-
-%Contribution from B2 current source
-Z_indirect = ZTB1_pu + ZLe1_pu + Z_grid_pu %[output:53c16ddb]
-Z_homo = 0 %[output:9938685b]
-Z_direct = ZTB1_pu + Z_indirect + Z_homo %[output:53090f47]
-ZLe1_pu + Z_grid_pu %[output:2a8822b3]
-I_base_66kv = Sbase / U_66kv %[output:1eb19898]
-
-I_fault = 1.1 *(655 / I_base_66kv)* (ZLe1_pu + Z_grid_pu) / ((ZLe1_pu + Z_grid_pu)+(ZTB1_pu + Z_indirect + Z_homo)) %[output:4322efb4]
-abs(I_fault) %[output:69a9040c]
-fprintf("The contribution of fault current from source 1 to feeder B2 is: %f02 pu", abs(I_fault)) %[output:709a5366]
-% I_fault_B1(2, 1) = abs(I_fault)*I_base_66kv
-I_fault_B1(2, 1) = 0;
-
-%Contribution from A38a current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:0f70782e]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:337056bd]
-Z_homo = 0 %[output:6e595fa2]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:7de53382]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:7c671131]
-% I_fault_B1(3, 1) = abs(I_fault)*I_base_66kv
-I_fault_B1(3, 1) = 0;
-
-%Contribution from A38b current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:5aed5471]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:04b2abce]
-Z_homo = 0 %[output:2c726d74]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:24793ebb]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:356e6fb8]
-% I_fault_B1(4, 1) = abs(I_fault)*I_base_66kv
-I_fault_B1(4, 1) = 0;
-
-%Contribution from A37 current source
-Z_direct = ZLe1_pu + ZTB1_pu %[output:5d70d80b]
-Z_indirect = ZLe1_pu + ZTB1_pu + Z_grid_pu %[output:49483421]
-Z_homo = 0 %[output:6270d2ae]
-I_fault = 1.1 * (655 / I_base_66kv) * (Z_grid_pu) / ((Z_direct + Z_indirect + Z_homo + Z_grid_pu)) %[output:45bf3693]
-fprintf("The contribution of fault current from source A38a to feeder B2 is: %f02 pu", abs(I_fault)) %[output:511546ff]
-% I_fault_B1(5, 1) = abs(I_fault)*I_base_66kv
-I_fault_B1(5, 1) = 0;
-I_fault_B1 %[output:16a0b71a]
-
-
-%%
-%[text] ## Single phase to earth fault on Export Cable B1 
-
-%%
-%[text] ## From B1 current source to B1 Export cable
-
-z_ll1 = Z0_Le_ON_pu + Z0_grid_pu
-z_ll2 = Z0_Le2_pu + Z0_TA38a_pu
-z_ll3 = Z0_Le2_pu + Z0_TA38b_pu
-z_ll4 = Z0_Le3_pu + Z0_TA37_pu
-z_ll5 = (z_ll1^-1 + z_ll2^-1 + z_ll3^-1 + z_ll4^-1)^-1
-z_s = Z0_Le1_1_pu + z_ll5
-
-z_ll6 = (Z0_TB1_pu^-1 + Z0_TB2_pu^-1)^-1
-z_s2 = Z0_Le1_2_pu + z_ll6
-
-z_ll7 = (z_s^-1 + z_s2^-1)^-1
-Z_homopolar = z_ll7
-
-%Yeah this is taking way too long, imma do it via admittance matrix
-Z_B1 = zeros(5, 5)
-Z_B1(1, 1) = 1 / (ZfLB1_pu + ZTB1_pu + ZLe1_2_pu);
-% Z_B1(2, 2) = Z_B1(1, 1) + 1/(ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / ( ...
-%     Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_TB1_pu)
-Z_B1(2, 2) = Z_B1(1, 1) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / ( ...
-    Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_TB1_pu)
-Z_B1(3, 3) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le1_2_pu + Z0_TB2_pu) + 1 / (Z0_Le1_2_pu)
-Z_B1(4, 4) = 1 / (Z0_Le1_1_pu) + 1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / (Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu)
-Z_B1(5, 5) = 1 / (Z0_TB1_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_Le1_2_pu);
-
-%Off-diagonal terms
-Z_B1(1, 2) = -1 / (ZfLB1_pu + ZTB1_pu + ZLe1_1_pu);
-Z_B1(2, 1) = Z_B1(1, 2);
-
-Z_B1(2, 4) = - (1 / (Z0_Le_ON_pu + Z0_grid_pu) + 1 / (Z0_Le2_pu + Z0_TA38a_pu) + 1 / (Z0_Le2_pu + Z0_TA38b_pu) + 1 / (Z0_Le3_pu + Z0_TA37_pu));
-Z_B1(4, 2) = Z_B1(2, 4);
-
-Z_B1(2, 5) = -(1 / (Z0_TB1_pu) + 1 / (Z0_TB2_pu));
-Z_B1(5, 2) = Z_B1(2, 5);
-
-Z_B1(3, 4) = - (1 / (Z0_Le1_1_pu));
-Z_B1(4, 3) = Z_B1(3, 4);
-
-Z_B1(3, 5) = - (1 / (Z0_Le1_2_pu));
-Z_B1(5, 3) = Z_B1(3, 5);
-
-Z_fault_B1 = Z_B1 \ eye(size(Z_B1))
-z1 = Z_fault_B1(2, 2)
-
-z2 = ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu
-
-z3 = (z1^-1 + z2^-2)^-1
-
-abs(z3)
-fprintf("Fault current going throught the fault point: ")
-abs(1.1 * (z2 / (z2 + z1)))
-
-%%
-%[text] ## From current source A38a to export cable
-
-Z_A38a = zeros(7, 7);
-Z_A38a(1, 1) = 1 / (ZfLA38a_pu + ZTA38a_pu + ZLe2_pu);
-Z_A38a(2, 2) =  1 / (ZLe1_1_pu) + 1 / (Z0_TB1_pu) + 1 / (Z0_TB2_pu) + 1 / (Z0_grid_pu + Z0_Le_ON_pu) + 1 / (Z0_TA37_pu + Z0_Le3_pu) + 1 / (Z0_TA38b_pu) + 1 / (Z0_TA38a_pu);
-
-% Z_A38a(3, 3) = Z_A38a(1, 1) + 1 / (ZLe1_1_pu) + 1 / (Z1_Le_ON_pu + Z_grid_pu);
-Z_A38a(3, 3) = Z_A38a(1, 1) + 1 / (ZLe1_1_pu);
-
-Z_A38a(4, 4) = 1 / (Z_grid_pu + Z1_Le_ON_pu + ZLe1_1_pu) + 1 / (Z0_Le1_2_pu) + 1 / (Z0_Le1_1_pu);
-Z_A38a(5, 5) = 1 / (Z0_Le1_1_pu) + 1/(Z0_Le2_pu) + 1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu);
-Z_A38a(6, 6) = 1 / (Z0_Le2_pu)  + 1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu);
-Z_A38a(7, 7) = 1 / (Z0_Le1_2_pu) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu);
-
-Z_A38a(1, 3) = -(1 / (ZfLA38a_pu + ZTA38a_pu + ZLe2_pu)); 
-Z_A38a(3, 1) = Z_A38a(1, 3);
-
-Z_A38a(3, 2) = -(1 / (ZLe1_1_pu));
-Z_A38a(2, 3) = Z_A38a(3, 2);
-
-Z_A38a(2, 7) = -(1/(Z0_TB1_pu) + 1/(Z0_TB2_pu));
-Z_A38a(7, 2) = Z_A38a(2, 7);
-
-Z_A38a(2, 5) = -(1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu));
-Z_A38a(5, 2) = Z_A38a(2, 5);
-
-Z_A38a(6, 2) = -(1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu));
-Z_A38a(2, 6) = Z_A38a(6, 2);
-
-Z_A38a(4, 5) = -(1 / (Z0_Le1_1_pu));
-Z_A38a(5, 4) = Z_A38a(4, 5);
-
-Z_A38a(5, 6) = -(1/(Z0_Le2_pu));
-Z_A38a(6, 5) = Z_A38a(5, 6);
-
-Z_A38a(4, 7) = -(1/(Z0_Le1_2_pu));
-Z_A38a(7, 4) = Z_A38a(4, 7);
-
-Z_fault_A38a = Z_A38a \ eye(size(Z_A38a));
-fprintf("The equivalent impendance value at the fault location is: ");
-z1 = Z_fault_A38a(3, 3)
-z2 = Z1_Le_ON_pu + Z_grid_pu
-fprintf("Fault current");
-abs(1.1 * (z2/(z1+z2)))
-
-%%
-%[text] ## From current source A37 to export cable
-Z_A37 = zeros(6, 6);
-
-Z_A37(1, 1) = 1 / (ZfLA37_pu + ZTA37_pu + ZLe3_pu);
-
-% Z_A37(2, 2) = Z_A37(1, 1) + 1/(ZLe1_1_pu) + 1/(Z1_Le_ON + Z_grid_pu);
-Z_A37(2, 2) = Z_A37(1, 1) + 1/(ZLe1_1_pu);
-
-Z_A37(3, 3) = 1/(ZLe1_1_pu) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu) + 1/(Z0_grid_pu + Z0_Le_ON_pu) + 1/(Z0_TA38a_pu + Z0_Le2_pu) + 1/(Z0_TA38b_pu + Z0_Le2_pu);
-Z_A37(4, 4) = 1/(ZLe1_1_pu + Z1_Le_ON_pu + Z_grid_pu) + 1/(Z0_Le1_1_pu) + 1/(Z0_Le1_2_pu);
-Z_A37(5, 5) = 1/(Z0_Le1_2_pu) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu);
-Z_A37(6, 6) = 1/(Z0_Le1_1_pu) + 1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le2_pu + Z0_TA38a_pu) + 1/(Z0_Le2_pu + Z0_TA38b_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu);
-
-Z_A37(1, 2) = -(1 / (ZfLA37_pu + ZTA37_pu + ZLe3_pu));
-Z_A37(2, 1) = Z_A37(1, 2);
-
-Z_A37(3, 2) = -(1/(ZLe1_1_pu));
-Z_A37(2, 3) = Z_A37(3, 2);
-
-Z_A37(3, 5) = -(1/(Z0_TB1_pu) + 1/(Z0_TB2_pu));
-Z_A37(5, 3) = Z_A37(3, 5);
-
-Z_A37(4, 5) = -(1/(Z0_Le1_2_pu));
-Z_A37(5, 4) = Z_A37(4, 5);
-
-Z_A37(4, 6) = -(1/(Z0_Le1_1_pu));
-Z_A37(6, 4) = Z_A37(4, 6);
-
-Z_A37(3, 6) = -(1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le2_pu + Z0_TA38a_pu) + 1/(Z0_Le2_pu + Z0_TA38b_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu));
-Z_A37(6, 3) = Z_A37(3, 6);
-
-Z_fault_A37 = Z_A37 \ eye(size(Z_A37));
-fprintf("The equivalent impendance value at the fault location is: ");
-z1 = Z_fault_A37(2, 2)
-z2 = Z1_Le_ON_pu + Z_grid_pu
-fprintf("Fault current"); 
-abs(1.1 * (z2/(z2+z1)))
-
-%%
-%[text] ## From the grid to Export cable
-Z_from_grid = zeros(6, 6);
-
-Z_from_grid(1, 1) = 1/(Z_grid_pu + Z1_Le_ON_pu + ZLe1_1_pu);
-Z_from_grid(2, 2) = Z_from_grid(1, 1) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu) + 1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu) + 1/(ZTA37_pu+Z0_Le3_pu);
-Z_from_grid(3, 3) = 1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le1_1_pu) + 1/(Z0_Le2_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu);
-Z_from_grid(4, 4) = 1/(Z0_Le1_2_pu) + 1/(Z0_TB1_pu) + 1/(Z0_TB2_pu);
-Z_from_grid(5, 5) = 1/(Z0_Le2_pu) + 1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu);
-Z_from_grid(6, 6) = 1/(Z0_Le1_1_pu) + 1/(Z0_Le1_2_pu) + 1/(Z_grid_pu + Z1_Le_ON + ZLe1_1_pu);
-
-Z_from_grid(1, 2) = -(1/(Z_grid_pu + Z1_Le_ON_pu + ZLe1_1_pu));
-Z_from_grid(2, 1) = Z_from_grid(1, 2);
-
-Z_from_grid(4, 2) = -(1/(Z0_TB1_pu) + 1/(Z0_TB2_pu));
-Z_from_grid(2, 4) = Z_from_grid(4, 2);
-
-Z_from_grid(4, 6) = -(1/(Z0_Le1_2_pu));
-Z_from_grid(6, 4) = Z_from_grid(4, 6);
-
-Z_from_grid(3, 6) = -(1/(Z0_Le1_1_pu));
-Z_from_grid(6, 3) = Z_from_grid(3, 6);
-
-Z_from_grid(3, 2) = -(1/(Z0_Le_ON_pu + Z0_grid_pu) + 1/(Z0_Le3_pu + Z0_TA37_pu));
-Z_from_grid(2, 3) = Z_from_grid(3, 2);
-
-Z_from_grid(3, 5) = -(1/(Z0_Le2_pu));
-Z_from_grid(5, 3) = Z_from_grid(3, 5);
-
-Z_from_grid(5, 2) = -(1/(Z0_TA38a_pu) + 1/(Z0_TA38b_pu));
-Z_from_grid(2, 5) = Z_from_grid(5, 2);
-
-Z_fault_from_grid = Z_from_grid \ eye(size(Z_from_grid));
-z1 = Z_fault_from_grid(1, 1)
-fprintf("Fault current"); 
-abs(1 / (z1))
 
 %[appendix]{"version":"1.0"}
 %---
