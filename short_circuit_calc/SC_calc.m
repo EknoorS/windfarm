@@ -32,105 +32,105 @@ X0_X1_grid_ratio = 4 %[output:3eb6d533]
 Z0_grid_pu = Z_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
 
 %%\
-S_T_B1 = 600e6; %[output:24baec0a]
-S_T_B2 = S_T_B1; %[output:881934c8]
-S_T_A = 900e6; %[output:881934c8]
+S_T_B1 = 600e6;
+S_T_B2 = S_T_B1;
+S_T_A = 900e6;
 S_T_Btb1 = 450e6;
 S_T_Btb2 = S_T_Btb1;
-% ST3 = 450e6 %[output:8c903fb5]
-% ST4 = 450e6 %[output:0a257361]
-% ST5 = 225e6 %[output:49622d72]
+% ST3 = 450e6
+% ST4 = 450e6
+% ST5 = 225e6
 S_T_shore = 1000e6;
 U_690 = 690;
-U_66kv = 66e3; %[output:90442a2c]
+U_66kv = 66e3;
 U_220kV = 220e3;
-U_380kV = 380e3; %[output:4ccd0c98]
+U_380kV = 380e3;
 % Z_grid = ((380e3)^2/S_grid)*(Sbase/Ubase^2)
 
 % Transfo 
 uk_trafo_transport = 0.14;             % Kortsluitspanning trafo (14%)
-X0_X1_T_ratio = 2.4 %[output:0499a215]
+X0_X1_T_ratio = 2.4 %[output:24baec0a]
 
-Z1_TB1 = uk_trafo_transport*(U_66kv^2/S_T_B1)*j %[output:5f0e66e1]
-Z1_TB2 = uk_trafo_transport* (U_66kv^2/S_T_B2)*j %[output:50432b69]
-% ZTA38a = uk_trafo* (U_66kv^2/ST3)*j %[output:984046ea]
-% ZTA38b = uk_trafo*(U_66kv^2/ST4)*j %[output:8806d3bb]
-% ZTA37 = uk_trafo* (U_66kv^2/ST5)*j %[output:02ac021b]
-Z1_TB3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
-Z1_TA3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j
+Z1_TB1 = uk_trafo_transport*(U_66kv^2/S_T_B1)*j %[output:881934c8]
+Z1_TB2 = uk_trafo_transport* (U_66kv^2/S_T_B2)*j %[output:90442a2c]
+% ZTA38a = uk_trafo* (U_66kv^2/ST3)*j
+% ZTA38b = uk_trafo*(U_66kv^2/ST4)*j
+% ZTA37 = uk_trafo* (U_66kv^2/ST5)*j
+Z1_TB3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j %[output:4ccd0c98]
+Z1_TA3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j %[output:5f0e66e1]
 Z1_TA = uk_trafo_transport*(U_66kv^2 / S_T_A)*j;
 
 uk_trafo_turbine = 0.025;
-Z1_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1)
-Z1_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2)
-Z1_T_Atb = uk_trafo_turbine*(U_66kv^2 / S_T_A)
+Z1_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1) %[output:50432b69]
+Z1_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2) %[output:6111e463]
+Z1_T_Atb = uk_trafo_turbine*(U_66kv^2 / S_T_A) %[output:406676ac]
 
 
-Z1_TB1_pu = Z1_TB1*( Sbase/U_66kv^2 )  %[output:6111e463]
+Z1_TB1_pu = Z1_TB1*( Sbase/U_66kv^2 )  %[output:0499a215]
 Z0_TB1_pu = Z1_TB1_pu* X0_X1_T_ratio %[output:9a6ca00e]
 
-Z1_TB2_pu = Z1_TB2*( Sbase/U_66kv^2 )   %[output:406676ac]
-Z0_TB2_pu = Z1_TB2_pu* X0_X1_T_ratio %[output:72a7a891]
+Z1_TB2_pu = Z1_TB2*( Sbase/U_66kv^2 )   %[output:72a7a891]
+Z0_TB2_pu = Z1_TB2_pu* X0_X1_T_ratio %[output:2cbaa86d]
 
-Z1_TB3_pu = ZTB3*( Sbase/U_380kV^2)
-Z0_TB3_pu = Z1_TB3_pu*X0_X1_T_ratio
+Z1_TB3_pu = Z1_TB3*( Sbase/U_380kV^2) %[output:6642cb70]
+Z0_TB3_pu = Z1_TB3_pu*X0_X1_T_ratio %[output:72dad80f]
 
-Z1_T_Btb1_pu = Z1_T_Btb1*(Sbase / U_66kv^2)
+Z1_T_Btb1_pu = Z1_T_Btb1*(Sbase / U_66kv^2) %[output:0aaf1166]
 Z0_T_Btb1_pu = Z1_T_Btb1_pu* X0_X1_T_ratio;
 
-Z1_T_Btb2_pu = Z1_T_Btb2*(Sbase / U_66kv^2)
+Z1_T_Btb2_pu = Z1_T_Btb2*(Sbase / U_66kv^2) %[output:81e8e5f2]
 Z0_T_Btb2_pu = Z1_T_Btb2_pu* X0_X1_T_ratio;
 
-Z1_TA_pu = Z1_TA* ( Sbase/U_66kv^2)
-Z0_TA_pu = Z1_TA_pu* X0_X1_T_ratio
+Z1_TA_pu = Z1_TA* ( Sbase/U_66kv^2) %[output:9040e91d]
+Z0_TA_pu = Z1_TA_pu* X0_X1_T_ratio %[output:7f3ecd22]
 
-Z1_TA3_pu = Z1_TA3*( Sbase/U_380kV^2)
-Z0_TA3_pu = Z1_TA3_pu* X0_X1_T_ratio
+Z1_TA3_pu = Z1_TA3*( Sbase/U_380kV^2) %[output:37695c95]
+Z0_TA3_pu = Z1_TA3_pu* X0_X1_T_ratio %[output:329d66bb]
 
-Z1_T_Atb_pu = Z1_T_Atb*( Sbase/U_66kv^2)
-Z0_T_Atb_pu = Z1_T_Atb_pu*X0_X1_T_ratio
+Z1_T_Atb_pu = Z1_T_Atb*( Sbase/U_66kv^2) %[output:35148a5c]
+Z0_T_Atb_pu = Z1_T_Atb_pu*X0_X1_T_ratio %[output:91896ba5]
 
 %Grounding transformer
-Z0_ground = j*1 %the impedance of this ground transformer is very low.
+Z0_ground = j*1 %the impedance of this ground transformer is very low. %[output:7efbdb58]
 
 % Export Cables 
-length = 60 %The export cable length is 60km %[output:2cbaa86d]
-% R_km = 0.1  %Ohm/km %[output:30a79469]
-% L_km = 0.39 %mH/km %[output:52061116]
-% C_km = 0.18 %uF/km  %Just mock number, could be different later on %[output:6fe428bf]
+length = 60 %The export cable length is 60km %[output:52bbb9d6]
+% R_km = 0.1  %Ohm/km
+% L_km = 0.39 %mH/km
+% C_km = 0.18 %uF/km  %Just mock number, could be different later on
 
-% Z_line = R_km*length + j*(omega*L_km*length*10^-3)  %[output:2d75037d]
+% Z_line = R_km*length + j*(omega*L_km*length*10^-3) 
 
-R1_km = 0.0612 %Ohm/km
-Z1_L_km = j*0.1545 %Ohm/km
+R1_km = 0.0612 %Ohm/km %[output:6ef11370]
+Z1_L_km = j*0.1545 %Ohm/km %[output:27dc3d7d]
 
-R0_km = 0.1968
-Z0_L_km = j*0.1322
+R0_km = 0.1968 %[output:7f689431]
+Z0_L_km = j*0.1322 %[output:4288de9d]
 
-Z1_SM_line = length * (R1_km + Z1_L_km)
+Z1_SM_line = length * (R1_km + Z1_L_km) %[output:6aa7f0c7]
 
-Z1_LSM1_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:424b1f03]
-Z1_LSM1a_pu = Z1_LSM1b_pu/2 %[output:5435ed8d]
-Z1_LSM1b_pu = Z1_LSM1b_pu/2 %[output:6cb383a7]
+Z1_LSM1_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:01213e93]
+Z1_LSM1a_pu = Z1_LSM1_pu/2 %[output:2275964a]
+Z1_LSM1b_pu = Z1_LSM1_pu/2 %[output:296e874c]
 
-Z1_LSM2_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:864d84e6]
-Z1_LSM3_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:4c0c949c]
+Z1_LSM2_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:617e640f]
+Z1_LSM3_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:972a33b3]
 
-% xo_x1_ratio_submarine = 1 %(could be from 1 to 1.5 because submarine cables have good return path via water and cable sheath) %[output:1d9c9443]
-% Z0_Le1_pu = ZLSM1b_pu * xo_x1_ratio_submarine %[output:65de1136]
-% Z0_Le1_1_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:6bb1159d]
-% Z0_Le1_2_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine %[output:29db49c3]
-% Z0_Le2_pu = ZLSM2_pu * xo_x1_ratio_submarine %[output:1e768a8f]
-% Z0_Le3_pu = ZLSM3_pu * xo_x1_ratio_submarine %[output:08d12e67]
+% xo_x1_ratio_submarine = 1 %(could be from 1 to 1.5 because submarine cables have good return path via water and cable sheath)
+% Z0_Le1_pu = ZLSM1b_pu * xo_x1_ratio_submarine
+% Z0_Le1_1_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine
+% Z0_Le1_2_pu = Z0_Le1_pu/2 * xo_x1_ratio_submarine
+% Z0_Le2_pu = ZLSM2_pu * xo_x1_ratio_submarine
+% Z0_Le3_pu = ZLSM3_pu * xo_x1_ratio_submarine
 
-Z0_SM_line = length * (R0_km + Z0_L_km)
+Z0_SM_line = length * (R0_km + Z0_L_km) %[output:6cfeaf0a]
 
-Z0_LSM1_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:424b1f03]
-Z0_LSM1a_pu = Z0_LSM1b_pu/2 %[output:5435ed8d]
-Z0_LSM1b_pu = Z0_LSM1b_pu/2 %[output:6cb383a7]
+Z0_LSM1_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:4704df9f]
+Z0_LSM1a_pu = Z0_LSM1_pu/2 %[output:9e5299ba]
+Z0_LSM1b_pu = Z0_LSM1_pu/2 %[output:325fa3c6]
 
-Z0_LSM2_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:864d84e6]
-Z0_LSM3_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:4c0c949c]
+Z0_LSM2_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:48547e02]
+Z0_LSM3_pu = Z0_SM_line * (Sbase/Ubase^2) %[output:07057f12]
 
 
 %%On shore overhead transmission cables
@@ -145,51 +145,51 @@ C0_Le_ON = 0.0084e-6;   % from RT_OPAL parameters
 
 length_ON = 150; %km
 
-comp = 1/(C1_Le_ON*length_ON*100*pi) %[output:0b071e2c]
-(comp / 100*pi) / length_ON %[output:5d520934]
+comp = 1/(C1_Le_ON*length_ON*100*pi) %[output:63e8e86e]
+(comp / 100*pi) / length_ON %[output:6852e127]
 
-Z1_ON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:1dceb1ab]
-Z0_ON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:4ba1a123]
+Z1_ON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:98017ce2]
+Z0_ON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:6a662091]
 
-Z1_ON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:1dceb1ab]
-Z0_ON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:4ba1a123]
+Z1_ON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:83a5cf02]
+Z0_ON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:8b017d34]
 
-Z1_ON_B_pu = Z1_ON_B * (Sbase / Ubase^2) %[output:93fbbe05]
-Z0_ON_B_pu = Z0_ON_B * (Sbase / Ubase^2) %[output:535c4548]
+Z1_ON_B_pu = Z1_ON_B * (Sbase / Ubase^2) %[output:3a490f70]
+Z0_ON_B_pu = Z0_ON_B * (Sbase / Ubase^2) %[output:88a96e0b]
 
-Z1_ON_A_pu = Z1_ON_A * (Sbase / Ubase^2) %[output:93fbbe05]
-Z0_ON_A_pu = Z0_ON_A * (Sbase / Ubase^2) %[output:535c4548]
+Z1_ON_A_pu = Z1_ON_A * (Sbase / Ubase^2) %[output:8058a2e5]
+Z0_ON_A_pu = Z0_ON_A * (Sbase / Ubase^2) %[output:981da208]
 
 
 %Feeder line zero sequence impedance
-X0_X1_L_ratio = 1.5 %[output:3dca68af]
+X0_X1_L_ratio = 1.5 %[output:615deaab]
 
 %%Feeder equivalent parallel impedance
-Z1_fLB1 = 0.244686 + j*0.153423 %[output:5710454c]
-Z1_fLB2 = 0.20829138 + j*0.13060804 %[output:3bbeb79e]
-Z1_fLA38a = 0.3514672 + j*0.220373 %[output:5ade169b]
-Z1_fLA38b = 0.408561332 + j*0.2561899 %[output:24a51edb]
-Z1_fLA37 = 0.43514837 + j*0.27285307 %[output:1a1f8217]
+Z1_fLB1 = 0.244686 + j*0.153423 %[output:19cbe8f7]
+Z1_fLB2 = 0.20829138 + j*0.13060804 %[output:8b24bcbe]
+Z1_fLA38a = 0.3514672 + j*0.220373 %[output:9352273c]
+Z1_fLA38b = 0.408561332 + j*0.2561899 %[output:841ebe2a]
+Z1_fLA37 = 0.43514837 + j*0.27285307 %[output:92377250]
 
 
-Z1_fLB1_pu = Z1_fLB1 * (Sbase / Ubase2^2) %[output:6d773145]
-Z0_fLB1_pu = Z1_fLB1_pu*X0_X1_L_ratio
+Z1_fLB1_pu = Z1_fLB1 * (Sbase / Ubase2^2) %[output:52a59b09]
+Z0_fLB1_pu = Z1_fLB1_pu*X0_X1_L_ratio %[output:8b20d394]
 
-Z1_fLB2_pu = Z1_fLB2 * (Sbase / Ubase2^2) %[output:3262f315]
-Z0_fLB2_pu = Z1_fLB2_pu*X0_X1_L_ratio
+Z1_fLB2_pu = Z1_fLB2 * (Sbase / Ubase2^2) %[output:72b0d3e1]
+Z0_fLB2_pu = Z1_fLB2_pu*X0_X1_L_ratio %[output:73e95482]
 
-Z1_fLA38a_pu = Z1_fLA38a * (Sbase / Ubase2^2) %[output:6d80f36a]
-Z0_fLA38a_pu = Z1_fLA38a_pu * X0_X1_L_ratio
+Z1_fLA38a_pu = Z1_fLA38a * (Sbase / Ubase2^2) %[output:1fc1cfc5]
+Z0_fLA38a_pu = Z1_fLA38a_pu * X0_X1_L_ratio %[output:7a73bf85]
 
-Z1_fLA38b_pu = Z1_fLA38b * (Sbase / Ubase2^2) %[output:5a15c653]
-Z0_fLA38b_pu = Z1_fLA38b_pu * X0_X1_L_ratio
+Z1_fLA38b_pu = Z1_fLA38b * (Sbase / Ubase2^2) %[output:058546b6]
+Z0_fLA38b_pu = Z1_fLA38b_pu * X0_X1_L_ratio %[output:2c879ef5]
 
-Z1_fLA37_pu = Z1_fLA37 * (Sbase / Ubase2^2) %[output:2c66f961]
-Z0_fLA37_pu = Z1_fLA37_pu * X0_X1_L_ratio
+Z1_fLA37_pu = Z1_fLA37 * (Sbase / Ubase2^2) %[output:9a3a7bae]
+Z0_fLA37_pu = Z1_fLA37_pu * X0_X1_L_ratio %[output:9b22189f]
 
 
-Z1_lfA_pu = (Z1_fLA38a_pu^-1 + Z1_fLA38b_pu^-1 + Z1_fLA37_pu^-1)^-1
-Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio
+Z1_lfA_pu = (Z1_fLA38a_pu^-1 + Z1_fLA38b_pu^-1 + Z1_fLA37_pu^-1)^-1 %[output:874da711]
+Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio %[output:5af88a9f]
 
 
 %[appendix]{"version":"1.0"}
@@ -246,383 +246,206 @@ Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_grid_pu","value":"0.0331 + 0.6622i"}}
 %---
 %[output:24baec0a]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ST1","value":"600000000"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_T_ratio","value":"2.4000"}}
 %---
 %[output:881934c8]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ST2","value":"600000000"}}
-%---
-%[output:8c903fb5]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ST3","value":"450000000"}}
-%---
-%[output:0a257361]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ST4","value":"450000000"}}
-%---
-%[output:49622d72]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ST5","value":"225000000"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB1","value":"0.0000 + 1.0164i"}}
 %---
 %[output:90442a2c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"U_66kv","value":"66000"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB2","value":"0.0000 + 1.0164i"}}
 %---
 %[output:4ccd0c98]
-%   data: {"dataType":"textualVariable","outputData":{"name":"U_380kV","value":"380000"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB3","value":"0.0000 +20.2160i"}}
 %---
 %[output:5f0e66e1]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTB1","value":"0.0000 + 1.0164i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TA3","value":"0.0000 +20.2160i"}}
 %---
 %[output:50432b69]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTB2","value":"0.0000 + 1.0164i"}}
-%---
-%[output:984046ea]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA38a","value":"0.0000 + 1.3552i"}}
-%---
-%[output:8806d3bb]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA38b","value":"0.0000 + 1.3552i"}}
-%---
-%[output:02ac021b]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA37","value":"0.0000 + 2.7104i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1","value":"0.2420"}}
 %---
 %[output:6111e463]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTB1_pu","value":"0.0000 + 0.0233i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2","value":"0.2420"}}
 %---
 %[output:406676ac]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTB2_pu","value":"0.0000 + 0.0233i"}}
-%---
-%[output:0e36b99a]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA38a_pu","value":"0.0000 + 0.0311i"}}
-%---
-%[output:32b0c49c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA38b_pu","value":"0.0000 + 0.0311i"}}
-%---
-%[output:1621f991]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZTA37_pu","value":"0.0000 + 0.0622i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb","value":"0.1210"}}
 %---
 %[output:0499a215]
-%   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_T_ratio","value":"2.4000"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB1_pu","value":"0.0000 + 0.0233i"}}
 %---
 %[output:9a6ca00e]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB1_pu","value":"0.0000 + 0.0560i"}}
 %---
 %[output:72a7a891]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB2_pu","value":"0.0000 + 0.0560i"}}
-%---
-%[output:7e5f9e24]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA38a_pu","value":"0.0000 + 0.0747i"}}
-%---
-%[output:87c18141]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA38b_pu","value":"0.0000 + 0.0747i"}}
-%---
-%[output:02197d08]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA37_pu","value":"0.0000 + 0.1493i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB2_pu","value":"0.0000 + 0.0233i"}}
 %---
 %[output:2cbaa86d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB2_pu","value":"0.0000 + 0.0560i"}}
+%---
+%[output:6642cb70]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB3_pu","value":"0.0000 + 0.0140i"}}
+%---
+%[output:72dad80f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB3_pu","value":"0.0000 + 0.0336i"}}
+%---
+%[output:0aaf1166]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1_pu","value":"0.0056"}}
+%---
+%[output:81e8e5f2]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2_pu","value":"0.0056"}}
+%---
+%[output:9040e91d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TA_pu","value":"0.0000 + 0.0156i"}}
+%---
+%[output:7f3ecd22]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA_pu","value":"0.0000 + 0.0373i"}}
+%---
+%[output:37695c95]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TA3_pu","value":"0.0000 + 0.0140i"}}
+%---
+%[output:329d66bb]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA3_pu","value":"0.0000 + 0.0336i"}}
+%---
+%[output:35148a5c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb_pu","value":"0.0028"}}
+%---
+%[output:91896ba5]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_T_Atb_pu","value":"0.0067"}}
+%---
+%[output:7efbdb58]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ground","value":"0.0000 + 1.0000i"}}
+%---
+%[output:52bbb9d6]
 %   data: {"dataType":"textualVariable","outputData":{"name":"length","value":"60"}}
 %---
-%[output:30a79469]
-%   data: {"dataType":"textualVariable","outputData":{"name":"R_km","value":"0.1000"}}
+%[output:6ef11370]
+%   data: {"dataType":"textualVariable","outputData":{"name":"R1_km","value":"0.0612"}}
 %---
-%[output:6fe428bf]
-%   data: {"dataType":"textualVariable","outputData":{"name":"C_km","value":"0.1800"}}
+%[output:27dc3d7d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_L_km","value":"0.0000 + 0.1545i"}}
 %---
-%[output:52061116]
-%   data: {"dataType":"textualVariable","outputData":{"name":"L_km","value":"0.3900"}}
+%[output:7f689431]
+%   data: {"dataType":"textualVariable","outputData":{"name":"R0_km","value":"0.1968"}}
 %---
-%[output:2d75037d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_line","value":"6.0000 + 7.3513i"}}
+%[output:4288de9d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_L_km","value":"0.0000 + 0.1322i"}}
 %---
-%[output:424b1f03]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZLe1_pu","value":"0.0042 + 0.0051i"}}
+%[output:6aa7f0c7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_SM_line","value":"3.6720 + 9.2700i"}}
 %---
-%[output:5435ed8d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZLe1_1_pu","value":"0.0021 + 0.0025i"}}
+%[output:01213e93]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LSM1_pu","value":"0.0025 + 0.0064i"}}
 %---
-%[output:6cb383a7]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZLe1_2_pu","value":"0.0021 + 0.0025i"}}
+%[output:2275964a]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LSM1a_pu","value":"0.0013 + 0.0032i"}}
 %---
-%[output:864d84e6]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZLe2_pu","value":"0.0042 + 0.0051i"}}
+%[output:296e874c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LSM1b_pu","value":"0.0013 + 0.0032i"}}
 %---
-%[output:4c0c949c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZLe3_pu","value":"0.0042 + 0.0051i"}}
+%[output:617e640f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LSM2_pu","value":"0.0025 + 0.0064i"}}
 %---
-%[output:1d9c9443]
-%   data: {"dataType":"textualVariable","outputData":{"name":"xo_x1_ratio_submarine","value":"1"}}
+%[output:972a33b3]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LSM3_pu","value":"0.0025 + 0.0064i"}}
 %---
-%[output:65de1136]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le1_pu","value":"0.0042 + 0.0051i"}}
+%[output:6cfeaf0a]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_SM_line","value":"11.8080 + 7.9320i"}}
 %---
-%[output:6bb1159d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le1_1_pu","value":"0.0021 + 0.0025i"}}
+%[output:4704df9f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LSM1_pu","value":"0.0082 + 0.0055i"}}
 %---
-%[output:29db49c3]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le1_2_pu","value":"0.0021 + 0.0025i"}}
+%[output:9e5299ba]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LSM1a_pu","value":"0.0041 + 0.0027i"}}
 %---
-%[output:1e768a8f]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le2_pu","value":"0.0042 + 0.0051i"}}
+%[output:325fa3c6]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LSM1b_pu","value":"0.0041 + 0.0027i"}}
 %---
-%[output:08d12e67]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le3_pu","value":"0.0042 + 0.0051i"}}
+%[output:48547e02]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LSM2_pu","value":"0.0082 + 0.0055i"}}
 %---
-%[output:0b071e2c]
+%[output:07057f12]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LSM3_pu","value":"0.0082 + 0.0055i"}}
+%---
+%[output:63e8e86e]
 %   data: {"dataType":"textualVariable","outputData":{"name":"comp","value":"1.5490e+03"}}
 %---
-%[output:5d520934]
+%[output:6852e127]
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.3244"}}
 %---
-%[output:1dceb1ab]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_Le_ON","value":"3.1350 + 0.2660i"}}
+%[output:98017ce2]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_B","value":"3.1350 + 0.2660i"}}
 %---
-%[output:4ba1a123]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le_ON","value":"45.4500 + 0.9910i"}}
+%[output:6a662091]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_B","value":"45.4500 + 0.9910i"}}
 %---
-%[output:93fbbe05]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_Le_ON_pu","value":"0.0022 + 0.0002i"}}
+%[output:83a5cf02]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_A","value":"3.1350 + 0.2660i"}}
 %---
-%[output:535c4548]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_Le_ON_pu","value":"0.0315 + 0.0007i"}}
+%[output:8b017d34]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_A","value":"45.4500 + 0.9910i"}}
 %---
-%[output:3dca68af]
-%   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_L_ratio","value":"3"}}
+%[output:3a490f70]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_B_pu","value":"0.0022 + 0.0002i"}}
 %---
-%[output:5710454c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLB1","value":"0.2447 + 0.1534i"}}
+%[output:88a96e0b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_B_pu","value":"0.0315 + 0.0007i"}}
 %---
-%[output:3bbeb79e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLB2","value":"0.2083 + 0.1306i"}}
+%[output:8058a2e5]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_A_pu","value":"0.0022 + 0.0002i"}}
 %---
-%[output:5ade169b]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA38a","value":"0.3515 + 0.2204i"}}
+%[output:981da208]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_A_pu","value":"0.0315 + 0.0007i"}}
 %---
-%[output:24a51edb]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA38b","value":"0.4086 + 0.2562i"}}
+%[output:615deaab]
+%   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_L_ratio","value":"1.5000"}}
 %---
-%[output:1a1f8217]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA37","value":"0.4351 + 0.2729i"}}
+%[output:19cbe8f7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLB1","value":"0.2447 + 0.1534i"}}
 %---
-%[output:6d773145]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLB1_pu","value":"0.0056 + 0.0035i"}}
+%[output:8b24bcbe]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLB2","value":"0.2083 + 0.1306i"}}
 %---
-%[output:3262f315]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLB2_pu","value":"0.0048 + 0.0030i"}}
+%[output:9352273c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA38a","value":"0.3515 + 0.2204i"}}
 %---
-%[output:6d80f36a]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA38a_pu","value":"0.0081 + 0.0051i"}}
+%[output:841ebe2a]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA38b","value":"0.4086 + 0.2562i"}}
 %---
-%[output:5a15c653]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA38b_pu","value":"0.0094 + 0.0059i"}}
+%[output:92377250]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA37","value":"0.4351 + 0.2729i"}}
 %---
-%[output:2c66f961]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ZfLA37_pu","value":"0.0100 + 0.0063i"}}
+%[output:52a59b09]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLB1_pu","value":"0.0056 + 0.0035i"}}
 %---
-%[output:451d89e0]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sB1","value":"9.6800"}}
+%[output:8b20d394]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_fLB1_pu","value":"0.0084 + 0.0053i"}}
 %---
-%[output:90949ce3]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sB2","value":"9.6800"}}
+%[output:72b0d3e1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLB2_pu","value":"0.0048 + 0.0030i"}}
 %---
-%[output:094255b7]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA38a","value":"19.3600"}}
+%[output:73e95482]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_fLB2_pu","value":"0.0072 + 0.0045i"}}
 %---
-%[output:8baf6cc8]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA38b","value":"19.3600"}}
+%[output:1fc1cfc5]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA38a_pu","value":"0.0081 + 0.0051i"}}
 %---
-%[output:789aca9e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA37","value":"19.3600"}}
+%[output:7a73bf85]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_fLA38a_pu","value":"0.0121 + 0.0076i"}}
 %---
-%[output:525045e0]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sB1_pu","value":"0.2222"}}
+%[output:058546b6]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA38b_pu","value":"0.0094 + 0.0059i"}}
 %---
-%[output:964ad76e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sB2_pu","value":"0.2222"}}
+%[output:2c879ef5]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_fLA38b_pu","value":"0.0141 + 0.0088i"}}
 %---
-%[output:36c59655]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA38a_pu","value":"0.4444"}}
+%[output:9a3a7bae]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_fLA37_pu","value":"0.0100 + 0.0063i"}}
 %---
-%[output:52fb70a7]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA38b_pu","value":"0.4444"}}
+%[output:9b22189f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_fLA37_pu","value":"0.0150 + 0.0094i"}}
 %---
-%[output:4cb70c82]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_sA37_pu","value":"0.4444"}}
+%[output:874da711]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_lfA_pu","value":"0.0030 + 0.0019i"}}
 %---
-%[output:6f3e8db3]
-%   data: {"dataType":"matrix","outputData":{"columns":15,"exponent":"2","name":"A","rows":15,"type":"complex","value":[["0.0030 - 0.0603i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","2.8897 - 3.5970i","-0.9622 + 1.1789i","-0.9622 + 1.1789i","-0.9622 + 1.1789i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","-0.9622 + 1.1789i","0.9622 - 2.0361i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.4286i","0.0000 + 0.4286i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","-0.9622 + 1.1789i","0.0000 + 0.0000i","0.9622 - 1.8218i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.3214i","0.0000 + 0.3214i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","-0.9622 + 1.1789i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.9622 - 1.3396i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.1607i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.4286i","0.0000 + 0.0000i","0.0000 + 0.0000i","1.2778 - 1.2298i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-1.2778 + 0.8012i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.4286i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","1.5011 - 1.3698i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-1.5011 + 0.9413i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.3214i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.8896 - 0.8792i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.8896 + 0.5578i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.3214i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.7653 - 0.8013i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.7653 + 0.4799i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.1607i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.7185 - 0.6113i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.7185 + 0.4505i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-1.2778 + 0.8012i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","1.3228 - 0.8012i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-1.5011 + 0.9413i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","1.5461 - 0.9413i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.8896 + 0.5578i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.9121 - 0.5578i","0.0000 + 0.0000i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.7653 + 0.4799i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.7878 - 0.4799i","0.0000 + 0.0000i"],["0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","-0.7185 + 0.4505i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.0000 + 0.0000i","0.7410 - 0.4505i"]]}}
-%---
-%[output:2c8c48e3]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0594 + 0.0381i"}}
-%---
-%[output:13cb3dfd]
-%   data: {"dataType":"warning","outputData":{"text":"Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  2.418887e-19."}}
-%---
-%[output:031b3826]
-%   data: {"dataType":"matrix","outputData":{"columns":1,"name":"V","rows":15,"type":"complex","value":[["-0.0104 - 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"],["0.0104 + 0.1657i"]]}}
-%---
-%[output:27322763]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"2.0037"}}
-%---
-%[output:354023d0]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0104 + 0.1657i"}}
-%---
-%[output:8bc5d837]
-%   data: {"dataType":"text","outputData":{"text":"Hand calculate the impendace from bus 11 to GND:","truncated":false}}
-%---
-%[output:34353223]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0180 + 0.1975i"}}
-%---
-%[output:33ec8d23]
-%   data: {"dataType":"warning","outputData":{"text":"Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  2.418887e-19."}}
-%---
-%[output:3633aef0]
-%   data: {"dataType":"text","outputData":{"text":"B1 3 phase fault equivalent extracted via the Z impedance bus:","truncated":false}}
-%---
-%[output:49375457]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0202 + 0.1977i"}}
-%---
-%[output:9a8e204c]
-%   data: {"dataType":"text","outputData":{"text":"Fault current from bus 11 (pu)","truncated":false}}
-%---
-%[output:04842961]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.5121 - 5.0065i"}}
-%---
-%[output:5495ea02]
-%   data: {"dataType":"text","outputData":{"text":"Fault current from bus 11: ","truncated":false}}
-%---
-%[output:9aa24e57]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"7.6252e+03"}}
-%---
-%[output:41d99e86]
-%   data: {"dataType":"matrix","outputData":{"columns":1,"name":"I_fault2","rows":15,"type":"complex","value":[["0.0000 + 0.0000i"],["1.0000 - 0.0000i"],["-0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["-0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["-0.0000 - 0.0000i"],["-0.0000 - 0.0000i"],["-0.0000 + 0.0000i"],["0.0000 - 0.0000i"],["-0.0000 - 0.0000i"],["-0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 - 0.0000i"],["0.0000 - 0.0000i"]]}}
-%---
-%[output:76bbb151]
-%   data: {"dataType":"matrix","outputData":{"columns":1,"name":"S_bus","rows":15,"type":"complex","value":[["0.0000 + 0.0000i"],["0.0104 + 0.1657i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"],["0.0000 + 0.0000i"]]}}
-%---
-%[output:2e021f91]
-%   data: {"dataType":"matrix","outputData":{"columns":16,"name":"Z_fault_3f_e","rows":16,"type":"double","value":[["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"]]}}
-%---
-%[output:5d46006d]
-%   data: {"dataType":"warning","outputData":{"text":"Warning: Matrix is close to singular or badly scaled. Results may be inaccurate. RCOND =  1.816599e-19."}}
-%---
-%[output:245dfc12]
-%   data: {"dataType":"text","outputData":{"text":"The grid fault impendance at the point 16 is:","truncated":false}}
-%---
-%[output:913c1e5d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0125 + 0.1683i"}}
-%---
-%[output:11b1f05d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid","value":"5.9264"}}
-%---
-%[output:849d6518]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"9.0042e+05"}}
-%---
-%[output:76651de7]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1","value":"4.3301e+03"}}
-%---
-%[output:4cdbb90d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2","value":"4.3301e+03"}}
-%---
-%[output:8948f3db]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_a38a","value":"2.0979e+03"}}
-%---
-%[output:8348d3a2]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_a38b","value":"2.0979e+03"}}
-%---
-%[output:8ccd0509]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_37","value":"2.0979e+03"}}
-%---
-%[output:000423aa]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1","value":"4.3301e+03"}}
-%---
-%[output:6ea01538]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2","value":"4.3301e+03"}}
-%---
-%[output:46288c91]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A38a","value":"1.8465e+03"}}
-%---
-%[output:98595851]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A38b","value":"1.8465e+03"}}
-%---
-%[output:6bc3e807]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A37","value":"1.8465e+03"}}
-%---
-%[output:1440f525]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid","value":"7.6252e+03"}}
-%---
-%[output:3429cf3f]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"2.1825e+04"}}
-%---
-%[output:6fb1238b]
-%   data: {"dataType":"matrix","outputData":{"columns":6,"name":"I_fault_B1","rows":6,"type":"double","value":[["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
-%---
-%[output:2d893d2a]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_base_66kv","value":"1.5152e+03"}}
-%---
-%[output:53c16ddb]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
-%---
-%[output:9938685b]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
-%---
-%[output:53090f47]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0124 + 0.2173i"}}
-%---
-%[output:2a8822b3]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.0124 + 0.1706i"}}
-%---
-%[output:1eb19898]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_base_66kv","value":"1.5152e+03"}}
-%---
-%[output:4322efb4]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2093 - 0.0018i"}}
-%---
-%[output:69a9040c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.2093"}}
-%---
-%[output:709a5366]
-%   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source 1 to feeder B2 is: 0.20928802 pu","truncated":false}}
-%---
-%[output:0f70782e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
-%---
-%[output:337056bd]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
-%---
-%[output:6e595fa2]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
-%---
-%[output:7de53382]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
-%---
-%[output:7c671131]
-%   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
-%---
-%[output:5aed5471]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
-%---
-%[output:04b2abce]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
-%---
-%[output:2c726d74]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
-%---
-%[output:24793ebb]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
-%---
-%[output:356e6fb8]
-%   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
-%---
-%[output:5d70d80b]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_direct","value":"0.0042 + 0.0284i"}}
-%---
-%[output:49483421]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_indirect","value":"0.0124 + 0.1940i"}}
-%---
-%[output:6270d2ae]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_homo","value":"0"}}
-%---
-%[output:45bf3693]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault","value":"0.2027 + 0.0028i"}}
-%---
-%[output:511546ff]
-%   data: {"dataType":"text","outputData":{"text":"The contribution of fault current from source A38a to feeder B2 is: 0.20276002 pu","truncated":false}}
-%---
-%[output:16a0b71a]
-%   data: {"dataType":"matrix","outputData":{"columns":6,"exponent":"3","name":"I_fault_B1","rows":6,"type":"double","value":[["4.3301","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"],["0","0","0","0","0","0"]]}}
+%[output:5af88a9f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_lfA_pu","value":"0.0045 + 0.0028i"}}
 %---
