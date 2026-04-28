@@ -19,12 +19,12 @@ Z_grid = Ugrid^2 / S_grid %[output:792e10d7]
 R_grid = sqrt(Z_grid^2 / (1 + X_R_ratio^2)) %[output:3da1dc24]
 X_grid = X_R_ratio*R_grid*j %[output:61d154de]
 
-Z_grid_pu = (R_grid + X_grid) * (Sbase / Ubase2^2) %[output:7c219cb6]
+Z1_grid_pu = (R_grid + X_grid) * (Sbase / Ubase2^2) %[output:7c219cb6]
 
 
 %Grid zero sequence impedance
 X0_X1_grid_ratio = 4 %[output:3eb6d533]
-Z0_grid_pu = Z_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
+Z0_grid_pu = Z1_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
 
 %%\
 S_T_B1 = 600e6;
@@ -143,17 +143,17 @@ length_ON = 150; %km
 comp = 1/(C1_Le_ON*length_ON*100*pi) %[output:63e8e86e]
 (comp / 100*pi) / length_ON %[output:6852e127]
 
-Z1_ON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:98017ce2]
-Z0_ON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:6a662091]
+Z1_LON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:98017ce2]
+Z0_LON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:6a662091]
 
-Z1_ON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:83a5cf02]
-Z0_ON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:8b017d34]
+Z1_LON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:83a5cf02]
+Z0_LON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:8b017d34]
 
-Z1_ON_B_pu = Z1_ON_B * (Sbase / Ubase^2) %[output:3a490f70]
-Z0_ON_B_pu = Z0_ON_B * (Sbase / Ubase^2) %[output:88a96e0b]
+Z1_LON_B_pu = Z1_LON_B * (Sbase / Ubase^2) %[output:3a490f70]
+Z0_LON_B_pu = Z0_LON_B * (Sbase / Ubase^2) %[output:88a96e0b]
 
-Z1_ON_A_pu = Z1_ON_A * (Sbase / Ubase^2) %[output:8058a2e5]
-Z0_ON_A_pu = Z0_ON_A * (Sbase / Ubase^2) %[output:981da208]
+Z1_LON_A_pu = Z1_LON_A * (Sbase / Ubase^2) %[output:8058a2e5]
+Z0_LON_A_pu = Z0_LON_A * (Sbase / Ubase^2) %[output:981da208]
 
 
 %Feeder line zero sequence impedance
@@ -194,9 +194,46 @@ Z0_TB1_grouding = 0.25*(U_66kv^2 / S_TB1_Grounding) + j*0.15*(U_66kv^2 / S_TB1_G
 Z0_TB1_grouding_pu = Z0_TB1_grouding / (U_66kv^2 / S_TB1_Grounding) %[output:6ef30931]
 
 S_TA_Grounding = 100e6;
+
 Z0_TA_grouding = 0.25*(U_66kv^2 / S_TA_Grounding) + j*0.15*(U_66kv^2 / S_TA_Grounding)  %[output:69c16f1b]
 Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:2991768d]
 
+%% 1f to Earth fault calc
+%Current source B1
+z1 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu %[output:5af1fd3d]
+z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu %[output:21ac6f82]
+
+I_base_66kv = 100e6 / (sqrt(3)*66e3)
+I_source_b1 = 450e6 / (sqrt(3)*66e3)
+I_source_b1_pu = I_source_b1 / I_base_66kv
+I_fault_b1_pu = I_source_b1_pu*(z1 / z1 + z2) %[output:1e353ea1]
+I_fault_b1_pu_abs = abs(I_fault_b1_pu)
+
+%Current source B2
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
+z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu
+I_source_b2 = 450e6 / (sqrt(3)*66e3)
+I_source_b2_pu = I_source_b2 / I_base_66kv
+I_fault_b2_pu = I_source_b2_pu*(z1 / z1 + z2) %[output:1e353ea1]
+I_fault_b2_pu_abs = abs(I_fault_b2_pu)
+
+%Current source A
+z1 = Z1_grid_pu
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu
+
+I_source_A = 600e6 / (sqrt(3)*66e3)
+I_source_A_pu = I_source_A / I_base_66kv
+I_fault_A_pu = I_source_A_pu*(z1 / z1 + z2) %[output:1e353ea1]
+I_fault_A_pu_abs = abs(I_fault_A_pu)
+
+%Voltage source Grid
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu
+
+I_fault_grid_pu = 1 / z1
+I_fault_grid_pu_abs = abs(I_fault_grid)
+
+I_fault_1f_e_feederb1_pu = I_fault_grid_pu_abs + I_fault_A_pu_abs + I_fault_b2_pu_abs + I_fault_b1_pu_abs
+I_fault_1f_e_feederb1_pu * I_base_66kv
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
@@ -465,4 +502,13 @@ Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:299176
 %---
 %[output:2991768d]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA_grouding_pu","value":"0.2500 + 0.1500i"}}
+%---
+%[output:5af1fd3d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0103 + 0.0475i"}}
+%---
+%[output:21ac6f82]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.2688 + 0.2027i"}}
+%---
+%[output:1e353ea1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu","value":"1.2688 + 0.2027i"}}
 %---
