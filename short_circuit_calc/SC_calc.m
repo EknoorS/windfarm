@@ -85,10 +85,7 @@ Z0_TA3_pu = Z1_TA3_pu* X0_X1_T_ratio %[output:329d66bb]
 Z1_T_Atb_pu = Z1_T_Atb*( Sbase/U_66kv^2) %[output:35148a5c]
 Z0_T_Atb_pu = Z1_T_Atb_pu*X0_X1_T_ratio %[output:91896ba5]
 
-%Grounding transformer
-Z0_ground = j*1 %the impedance of this ground transformer is very low. %[output:7efbdb58]
-
-% Export Cables 
+% Export Cables (Submarine cables)
 length = 60 %The export cable length is 60km %[output:52bbb9d6]
 % R_km = 0.1  %Ohm/km
 % L_km = 0.39 %mH/km
@@ -96,6 +93,11 @@ length = 60 %The export cable length is 60km %[output:52bbb9d6]
 
 % Z_line = R_km*length + j*(omega*L_km*length*10^-3) 
 
+%Data from simulated lines based on paper: Calculation and Measurement 
+%of Sequence Parameters of Three-Core 
+%Submarine Cable with Semi-conductive 
+%Sheaths
+%
 R1_km = 0.0612 %Ohm/km %[output:6ef11370]
 Z1_L_km = j*0.1545 %Ohm/km %[output:27dc3d7d]
 
@@ -190,12 +192,12 @@ Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio %[output:5af88a9f]
 %Grouding transformer on feeder side parameters
 S_TB1_Grounding = 100e6;
 
-Z0_TB1_grouding = 0.25*(U_66kv^2 / S_TB1_Grounding) + j*0.15*(U_66kv^2 / S_TB1_Grounding)  %[output:2f2c0c42]
+Z0_TB1_grouding = 0.025*(U_66kv^2 / S_TB1_Grounding) + j*0.15*(U_66kv^2 / S_TB1_Grounding)  %[output:2f2c0c42]
 Z0_TB1_grouding_pu = Z0_TB1_grouding / (U_66kv^2 / S_TB1_Grounding) %[output:6ef30931]
 
 S_TA_Grounding = 100e6;
 
-Z0_TA_grouding = 0.25*(U_66kv^2 / S_TA_Grounding) + j*0.15*(U_66kv^2 / S_TA_Grounding)  %[output:69c16f1b]
+Z0_TA_grouding = 0.025*(U_66kv^2 / S_TA_Grounding) + j*0.15*(U_66kv^2 / S_TA_Grounding)  %[output:69c16f1b]
 Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:2991768d]
 
 %% 1f to Earth fault calc
@@ -203,34 +205,38 @@ Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:299176
 z1 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu %[output:5af1fd3d]
 z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu %[output:21ac6f82]
 
-I_base_66kv = 100e6 / (sqrt(3)*66e3)
-I_source_b1 = 450e6 / (sqrt(3)*66e3)
-I_source_b1_pu = I_source_b1 / I_base_66kv
-I_fault_b1_pu = I_source_b1_pu*(z1 / z1 + z2) %[output:1e353ea1]
-I_fault_b1_pu_abs = abs(I_fault_b1_pu)
+I_base_66kv = 100e6 / (sqrt(3)*66e3) %[output:1e353ea1]
+I_source_b1 = 450e6 / (sqrt(3)*66e3) %[output:104c5b7b]
+I_source_b1_pu = I_source_b1 / I_base_66kv %[output:0fdd8891]
+I_fault_b1_pu = I_source_b1_pu*(z1 / (z1 + z2)) %[output:6082474f]
+I_fault_b1_pu_abs = abs(I_fault_b1_pu) %[output:892f320d]
 
 %Current source B2
-z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
-z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu
-I_source_b2 = 450e6 / (sqrt(3)*66e3)
-I_source_b2_pu = I_source_b2 / I_base_66kv
-I_fault_b2_pu = I_source_b2_pu*(z1 / z1 + z2) %[output:1e353ea1]
-I_fault_b2_pu_abs = abs(I_fault_b2_pu)
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:7dd2f6d9]
+z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu %[output:5ba312d3]
+I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:3300f802]
+I_source_b2_pu = I_source_b2 / I_base_66kv %[output:05453124]
+I_fault_b2_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
+I_fault_b2_pu_abs = abs(I_fault_b2_pu) %[output:9328fd92]
 
 %Current source A
-z1 = Z1_grid_pu
-z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu
+z1 = Z1_grid_pu %[output:6e9cf13a]
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:2defe093]
 
-I_source_A = 600e6 / (sqrt(3)*66e3)
-I_source_A_pu = I_source_A / I_base_66kv
-I_fault_A_pu = I_source_A_pu*(z1 / z1 + z2) %[output:1e353ea1]
-I_fault_A_pu_abs = abs(I_fault_A_pu)
+I_source_A = 675e6 / (sqrt(3)*66e3) %[output:6d7d3db1]
+I_source_A_pu = I_source_A / I_base_66kv %[output:465c27ec]
+I_fault_A_pu = I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
+I_fault_A_pu_abs = abs(I_fault_A_pu) %[output:805c8d24]
 
 %Voltage source Grid
-z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu %[output:0964dbf0]
 
-I_fault_grid_pu = 1 / z1
-I_fault_grid_pu_abs = abs(I_fault_grid)
+I_fault_grid_pu = 1 / z1 %[output:71fd220e]
+I_fault_grid_pu_abs = abs(I_fault_grid_pu) %[output:4ffc0fe6]
+
+I_fault_1f_e_feederb1_pu = I_fault_grid_pu + I_fault_A_pu + I_fault_b2_pu + I_fault_b1_pu %[output:09b65577]
+I_fault_1f_e_feederb1_pu * I_base_66kv %[output:3eb50380]
+abs(I_fault_1f_e_feederb1_pu * I_base_66kv) %[output:6f1f88d8]
 
 I_fault_1f_e_feederb1_pu = I_fault_grid_pu_abs + I_fault_A_pu_abs + I_fault_b2_pu_abs + I_fault_b1_pu_abs
 I_fault_1f_e_feederb1_pu * I_base_66kv
@@ -279,7 +285,7 @@ I_fault_1f_e_feederb1_pu * I_base_66kv
 %   data: {"dataType":"textualVariable","outputData":{"name":"X_grid","value":"0.0000 + 7.2110i"}}
 %---
 %[output:7c219cb6]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z_grid_pu","value":"0.0083 + 0.1655i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_grid_pu","value":"0.0083 + 0.1655i"}}
 %---
 %[output:3eb6d533]
 %   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_grid_ratio","value":"4"}}
@@ -414,28 +420,28 @@ I_fault_1f_e_feederb1_pu * I_base_66kv
 %   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"0.3244"}}
 %---
 %[output:98017ce2]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_B","value":"3.1350 + 0.2660i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LON_B","value":"3.1350 + 0.2660i"}}
 %---
 %[output:6a662091]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_B","value":"45.4500 + 0.9910i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LON_B","value":"45.4500 + 0.9910i"}}
 %---
 %[output:83a5cf02]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_A","value":"3.1350 + 0.2660i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LON_A","value":"3.1350 + 0.2660i"}}
 %---
 %[output:8b017d34]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_A","value":"45.4500 + 0.9910i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LON_A","value":"45.4500 + 0.9910i"}}
 %---
 %[output:3a490f70]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_B_pu","value":"0.0022 + 0.0002i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LON_B_pu","value":"0.0022 + 0.0002i"}}
 %---
 %[output:88a96e0b]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_B_pu","value":"0.0315 + 0.0007i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LON_B_pu","value":"0.0315 + 0.0007i"}}
 %---
 %[output:8058a2e5]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_ON_A_pu","value":"0.0022 + 0.0002i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_LON_A_pu","value":"0.0022 + 0.0002i"}}
 %---
 %[output:981da208]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_ON_A_pu","value":"0.0315 + 0.0007i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_LON_A_pu","value":"0.0315 + 0.0007i"}}
 %---
 %[output:615deaab]
 %   data: {"dataType":"textualVariable","outputData":{"name":"X0_X1_L_ratio","value":"1.5000"}}
@@ -510,5 +516,71 @@ I_fault_1f_e_feederb1_pu * I_base_66kv
 %   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.2688 + 0.2027i"}}
 %---
 %[output:1e353ea1]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu","value":"1.2688 + 0.2027i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_base_66kv","value":"874.7731"}}
+%---
+%[output:104c5b7b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1","value":"3.9365e+03"}}
+%---
+%[output:0fdd8891]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_pu","value":"4.5000"}}
+%---
+%[output:6082474f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu","value":"5.7094 + 0.9123i"}}
+%---
+%[output:892f320d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu_abs","value":"5.7818"}}
+%---
+%[output:7dd2f6d9]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0104 + 0.1797i"}}
+%---
+%[output:5ba312d3]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.2770 + 0.3683i"}}
+%---
+%[output:3300f802]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2","value":"3.9365e+03"}}
+%---
+%[output:05453124]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_pu","value":"4.5000"}}
+%---
+%[output:93997cb6]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu","value":"5.7467 + 1.6573i"}}
+%---
+%[output:9328fd92]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu_abs","value":"5.9809"}}
+%---
+%[output:6e9cf13a]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0083 + 0.1655i"}}
+%---
+%[output:2defe093]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.2874 + 0.4157i"}}
+%---
+%[output:6d7d3db1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A","value":"5.2486e+03"}}
+%---
+%[output:465c27ec]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_pu","value":"6"}}
+%---
+%[output:12b91f3e]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu","value":"7.7242 + 2.4945i"}}
+%---
+%[output:805c8d24]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu_abs","value":"8.1170"}}
+%---
+%[output:0964dbf0]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.2956 + 0.5346i"}}
+%---
+%[output:71fd220e]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_pu","value":"0.7921 - 1.4324i"}}
+%---
+%[output:4ffc0fe6]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_pu_abs","value":"1.6369"}}
+%---
+%[output:09b65577]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1f_e_feederb1_pu","value":"19.9724 + 3.6316i"}}
+%---
+%[output:3eb50380]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"1.7471e+04 + 3.1769e+03i"}}
+%---
+%[output:6f1f88d8]
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"1.7758e+04"}}
 %---
