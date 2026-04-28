@@ -1,11 +1,6 @@
 
 %% Windfarm Short Circuit Analysis - Multi-Path Topology & Power Distribution
 
-% 1. Symbolen voor onbekenden (Grid & Compensatie)
-syms S_sc_onshore L_shore L_substation Z_turbine S_grid ST1 ST2 ST3 ST4 ST5
-syms Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 Z15 Zgrid_0 Zgrid
-syms ZL1 ZL2 ZL3 ZL4 ZL5 ZL6 ZL7 ZL8 R X
-syms ZTB1 ZTB2 ZTA38a ZTA38b ZTA37 Z_380kV Z_66kV Zeq1 Zeq2 ZR1 ZR2 ZR Sbase Ubase Ubase2 
 Sbase = 100e6 %[output:25e4c803]
 
 Zgrid_0=Zgrid * 10  %[output:20269858]
@@ -192,16 +187,26 @@ Z1_lfA_pu = (Z1_fLA38a_pu^-1 + Z1_fLA38b_pu^-1 + Z1_fLA37_pu^-1)^-1 %[output:874
 Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio %[output:5af88a9f]
 
 
+%Grouding transformer on feeder side parameters
+S_TB1_Grounding = 100e6;
+
+Z0_TB1_grouding = 0.25*(U_66kv^2 / S_TB1_Grounding) + j*0.15*(U_66kv^2 / S_TB1_Grounding)  %[output:2f2c0c42]
+Z0_TB1_grouding_pu = Z0_TB1_grouding / (U_66kv^2 / S_TB1_Grounding) %[output:6ef30931]
+
+S_TA_Grounding = 100e6;
+Z0_TA_grouding = 0.25*(U_66kv^2 / S_TA_Grounding) + j*0.15*(U_66kv^2 / S_TA_Grounding)  %[output:69c16f1b]
+Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:2991768d]
+
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
-%   data: {"layout":"onright","rightPanelPercent":17.3}
+%   data: {"layout":"onright","rightPanelPercent":23.4}
 %---
 %[output:25e4c803]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Sbase","value":"100000000"}}
 %---
 %[output:20269858]
-%   data: {"dataType":"symbolic","outputData":{"name":"Zgrid_0","value":"10\\,\\mathrm{Zgrid}"}}
+%   data: {"dataType":"symbolic","outputData":{"name":"Zgrid_0","value":"R\\,{\\left(10+200\\,\\mathrm{i}\\right)}"}}
 %---
 %[output:5e860e2e]
 %   data: {"dataType":"symbolic","outputData":{"name":"X","value":"20\\,R"}}
@@ -448,4 +453,16 @@ Z0_lfA_pu = Z1_lfA_pu*X0_X1_L_ratio %[output:5af88a9f]
 %---
 %[output:5af88a9f]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_lfA_pu","value":"0.0045 + 0.0028i"}}
+%---
+%[output:2f2c0c42]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB1_grouding","value":"10.8900 + 6.5340i"}}
+%---
+%[output:6ef30931]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB1_grouding_pu","value":"0.2500 + 0.1500i"}}
+%---
+%[output:69c16f1b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA_grouding","value":"10.8900 + 6.5340i"}}
+%---
+%[output:2991768d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA_grouding_pu","value":"0.2500 + 0.1500i"}}
 %---
