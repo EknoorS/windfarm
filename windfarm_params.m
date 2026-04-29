@@ -19,21 +19,21 @@ Vnom = 66e3;
 % Given: Z1 = 0.1 + j0.1225 ohm/km, X0/X1 = 3
 % Assumption: R0 = R1
 % =====================================================
+%Based on paper: Calculation and Measurement of Sequence Parameters of Three-Core Submarine Cable with Semi-conductive Sheaths
+R1_Le_1 = 0.0612;              % ohm/km
+X1_Le_1 = 0.1545;           % ohm/km
+R0_Le_1 = 0.1968;          
+X0_Le_1 = 0.1322;      % ohm/km
 
-R1_Le_1 = 0.1;              % ohm/km
-X1_Le_1 = 0.1225;           % ohm/km
-R0_Le_1 = R1_Le_1;          % assumed
-X0_Le_1 = 3 * X1_Le_1;      % ohm/km
-
-R1_Le_2 = 0.1;
-X1_Le_2 = 0.1225;
+R1_Le_2 = R1_Le_1;
+X1_Le_2 = X1_Le_1;
 R0_Le_2 = R1_Le_2;
-X0_Le_2 = 3 * X1_Le_2;
+X0_Le_2 = X0_Le_1;
 
-R1_Le_3 = 0.1;
-X1_Le_3 = 0.1225;
+R1_Le_3 = R1_Le_1;
+X1_Le_3 = X1_Le_1;
 R0_Le_3 = R1_Le_3;
-X0_Le_3 = 3 * X1_Le_3;
+X0_Le_3 = X0_Le_1;
 
 % Simulink block needs L instead of X  
 f = 50; % Hz
