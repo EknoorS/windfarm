@@ -274,20 +274,95 @@ I_fault_A_export = I_fault_A_export_pu_abs * I_base_220kv
 %Voltage source Grid
 z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z1_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
 
-I_base_380kv = Sbase / (sqrt(3)*380e3)
 I_fault_grid_export_pu = 1 / z1
 I_fault_grid_export_pu_abs = abs(I_fault_grid_export_pu)
-I_fault_grid_export = I_fault_grid_export_pu_abs * I_base_380kv
+I_fault_grid_export = I_fault_grid_export_pu_abs * I_base_220kv
 
 %Combine all contributions
 I_fault_1fe_export = I_fault_grid_export + I_fault_A_export + I_fault_B2_export +  I_fault_B1_export
 
 %% 3f Export cable B zone
 
+%Current source B1
+
+I_base_220kv = Sbase / (sqrt(3)*220e3)
+I_source_b1_220kv = 450e6 / (sqrt(3)*220e3)
+I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv
+
+I_fault_B1_3f_export_pu = 1.1*I_source_b1_220kv_pu
+I_fault_B1_3f_export_pu_abs = abs(I_fault_B1_3f_export_pu)
+I_fault_B1_3f_export = I_fault_B1_3f_export_pu_abs * I_base_220kv
+
+%Current source B2
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
+z2 = Z1_LSM1b_pu
+
+I_source_b2_220kv = 450e6 / (sqrt(3)*220e3)
+I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv
+I_fault_B2_3f_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2))
+I_fault_B2_3f_export_pu_abs = abs(I_fault_B2_3f_export_pu)
+I_fault_B2_3f_export = I_fault_B2_3f_export_pu_abs * I_base_220kv
+
+%Current source A
+z1 = Z1_grid_pu
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+
+I_source_A_220kv = 675e6 / (sqrt(3)*220e3)
+I_source_A_220kv_pu = I_source_A_220kv / I_base_220kv
+I_fault_A_3f_export_pu = 1.1*I_source_A_220kv_pu*(z1 / (z1 + z2))
+I_fault_A_3f_export_pu_abs = abs(I_fault_A_3f_export_pu)
+I_fault_A_3f_export = I_fault_A_3f_export_pu_abs * I_base_220kv
+
+%Voltage source Grid
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+I_fault_grid_3f_export_pu = 1 / z1
+I_fault_grid_3f_export_pu_abs = abs(I_fault_grid_3f_export_pu)
+I_fault_grid_3f_export = I_fault_grid_3f_export_pu_abs * I_base_220kv
+
+%Combine all contributions
+I_fault_3f_export = I_fault_grid_3f_export + I_fault_A_3f_export + I_fault_B2_3f_export +  I_fault_B1_3f_export
+
 
 
 
 %% 3f Feeder cable B zone
+
+% Current source B1
+I_source_b1_pu = I_source_b1 / I_base_66kv %[output:0fdd8891]
+I_fault_b1_3f_feed_pu = 1.1*I_source_b1_pu %[output:6082474f]
+I_fault_b1_3f_feed_pu_abs = abs(I_fault_b1_3f_feed_pu) %[output:892f320d]
+I_fault_b1_3f_feed = I_fault_b1_3f_feed_pu_abs*I_base_66kv
+
+% Current source B2
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:7dd2f6d9]
+z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu %[output:5ba312d3]
+
+I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:3300f802]
+I_source_b2_pu = I_source_b2 / I_base_66kv %[output:05453124]
+I_fault_b2_3f_feed_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
+I_fault_b2_3f_feed_pu_abs = abs(I_fault_b2_3f_feed_pu) %[output:9328fd92]
+I_fault_b1_3f_feed = I_fault_b2_3f_feed_pu_abs * I_base_66kv
+
+% Current source A
+z1 = Z1_grid_pu %[output:6e9cf13a]
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:2defe093]
+
+I_source_A = 675e6 / (sqrt(3)*66e3) %[output:6d7d3db1]
+I_source_A_pu = I_source_A / I_base_66kv %[output:465c27ec]
+I_fault_A_3f_feed_pu = I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
+I_fault_A_3f_feed_pu_abs = abs(I_fault_A_3f_feed_pu) %[output:805c8d24]
+I_fault_A_3f_feed = I_fault_A_3f_feed_pu_abs * I_base_66kv
+
+% Voltage source Grid
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:0964dbf0]
+
+I_fault_grid_3f_feed_pu = 1 / z1 %[output:71fd220e]
+I_fault_grid_3f_feed_pu_abs = abs(I_fault_grid_3f_feed_pu) %[output:4ffc0fe6]
+I_fault_grid_3f_feed = I_fault_grid_3f_feed_pu_abs * I_base_66kv
+
+I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed + I_fault_b1_3f_feed
+ 
+
 
 %[appendix]{"version":"1.0"}
 %---
