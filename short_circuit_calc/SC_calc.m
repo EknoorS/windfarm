@@ -204,7 +204,7 @@ z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_p
 I_base_66kv = 100e6 / (sqrt(3)*66e3) %[output:1e353ea1]
 I_source_b1 = 450e6 / (sqrt(3)*66e3) %[output:104c5b7b]
 I_source_b1_pu = I_source_b1 / I_base_66kv %[output:0fdd8891]
-I_fault_b1_pu = I_source_b1_pu*(z1 / (z1 + z2)) %[output:6082474f]
+I_fault_b1_pu = 1.1*I_source_b1_pu*(z1 / (z1 + z2)) %[output:6082474f]
 I_fault_b1_pu_abs = abs(I_fault_b1_pu) %[output:892f320d]
 
 %Current source B2
@@ -212,7 +212,7 @@ z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:7dd2f6d9]
 z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu %[output:5ba312d3]
 I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:3300f802]
 I_source_b2_pu = I_source_b2 / I_base_66kv %[output:05453124]
-I_fault_b2_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
+I_fault_b2_pu = 1.1*I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
 I_fault_b2_pu_abs = abs(I_fault_b2_pu) %[output:9328fd92]
 
 %Current source A
@@ -221,7 +221,7 @@ z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_p
 
 I_source_A = 675e6 / (sqrt(3)*66e3) %[output:6d7d3db1]
 I_source_A_pu = I_source_A / I_base_66kv %[output:465c27ec]
-I_fault_A_pu = I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
+I_fault_A_pu = 1.1*I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
 I_fault_A_pu_abs = abs(I_fault_A_pu) %[output:805c8d24]
 
 %Voltage source Grid
