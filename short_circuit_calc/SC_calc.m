@@ -10,17 +10,35 @@ omega = 2 * pi * f %[output:73b7d78c]
 
 %%Grid parameters calculations
 S_grid = 20e9 %[output:1fdf1a52]
-X_R_ratio = 20                                                                                                                                                          %[output:2721ca17]
-Z_grid = Ugrid^2 / S_grid %[output:792e10d7]
-R_grid = sqrt(Z_grid^2 / (1 + X_R_ratio^2)) %[output:3da1dc24]
-X_grid = X_R_ratio*R_grid*j %[output:61d154de]
+% X_R_ratio = 20                                                                                                                                                          %[output:2721ca17]
+% Z_grid = Ugrid^2 / S_grid %[output:792e10d7]
+% R_grid = sqrt(Z_grid^2 / (1 + X_R_ratio^2)) %[output:3da1dc24]
+% X_grid = X_R_ratio*R_grid*j %[output:61d154de]
 
-Z1_grid_pu = (R_grid + X_grid) * (Sbase / Ubase2^2) %[output:7c219cb6]
+% Z1_grid_pu = (R_grid + X_grid) * (Sbase / Ubase2^2) %[output:7c219cb6]
 
 
-%Grid zero sequence impedance
-X0_X1_grid_ratio = 4 %[output:3eb6d533]
-Z0_grid_pu = Z1_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
+
+% %Grid zero sequence impedance
+% X0_X1_grid_ratio = 4 %[output:3eb6d533]
+% Z0_grid_pu = Z1_grid_pu * X0_X1_grid_ratio %[output:53e05f78]
+
+%Grid parameter taken from the Simulink simulation
+X0_X1_grid_ratio = 30
+
+R1_grid = 0.01 * ((Ugrid^2) / S_grid) / 10
+L1_grid = (0.1 / 100*pi) * ((Ugrid^2) / S_grid) / 10
+
+ZL1_grid = 100*pi*L1_grid
+
+Z1_grid = R1_grid + j*ZL1_grid
+Z1_grid_pu = Z1_grid * (Sbase / Ubase2^2)
+
+R0_grid = R1_grid*X0_X1_grid_ratio
+ZL0_grid = ZL1_grid*X0_X1_grid_ratio
+
+Z0_grid = R0_grid + j*Z0_grid_pu
+Z0_grid_pu = Z0_grid * (Sbase / Ubase2^2)
 
 %%\
 S_T_B1 = 600e6;
@@ -52,9 +70,9 @@ Z1_TA3 = uk_trafo_transport*(U_380kV^2 / S_T_shore)*j %[output:5f0e66e1]
 Z1_TA = uk_trafo_transport*(U_66kv^2 / S_T_A)*j;
 
 uk_trafo_turbine = 0.025;
-Z1_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1) %[output:50432b69]
-Z1_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2) %[output:6111e463]
-Z1_T_Atb = uk_trafo_turbine*(U_66kv^2 / S_T_A) %[output:406676ac]
+Z1_T_Btb1 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb1)*j %[output:50432b69]
+Z1_T_Btb2 = uk_trafo_turbine*(U_66kv^2 / S_T_Btb2)*j %[output:6111e463]
+Z1_T_Atb = uk_trafo_turbine*(U_66kv^2 / S_T_A)*j %[output:406676ac]
 
 
 Z1_TB1_pu = Z1_TB1*( Sbase/U_66kv^2 )  %[output:0499a215]
@@ -141,11 +159,11 @@ length_ON = 150; %km
 comp = 1/(C1_Le_ON*length_ON*100*pi) %[output:63e8e86e]
 (comp / 100*pi) / length_ON %[output:6852e127]
 
-Z1_LON_B = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:98017ce2]
-Z0_LON_B = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:6a662091]
+Z1_LON_B = R1_Le_ON*length_ON + j*L1_Le_ON*length_ON*100*pi %[output:98017ce2]
+Z0_LON_B = R0_Le_ON*length_ON + j*L0_Le_ON*length_ON*100*pi %[output:6a662091]
 
-Z1_LON_A = R1_Le_ON*length_ON + j*L1_Le_ON*100*pi %[output:83a5cf02]
-Z0_LON_A = R0_Le_ON*length_ON + j*L0_Le_ON*100*pi %[output:8b017d34]
+Z1_LON_A = R1_Le_ON*length_ON + j*L1_Le_ON*length_ON*100*pi %[output:83a5cf02]
+Z0_LON_A = R0_Le_ON*length_ON + j*L0_Le_ON*length_ON*100*pi %[output:8b017d34]
 
 Z1_LON_B_pu = Z1_LON_B * (Sbase / Ubase^2) %[output:3a490f70]
 Z0_LON_B_pu = Z0_LON_B * (Sbase / Ubase^2) %[output:88a96e0b]
@@ -235,133 +253,138 @@ I_fault_1f_e_feederb1_pu * I_base_66kv %[output:3eb50380]
 abs(I_fault_1f_e_feederb1_pu * I_base_66kv) %[output:6f1f88d8]
 
 I_fault_1f_e_feederb1_pu = I_fault_grid_pu_abs + I_fault_A_pu_abs + I_fault_b2_pu_abs + I_fault_b1_pu_abs %[output:11e0a50a]
-I_fault_1f_e_feederb1_pu * I_base_66kv %[output:376eb740]
+I_fault_1f_e_feederb1 = I_fault_1f_e_feederb1_pu * I_base_66kv %[output:376eb740]
+I_fault_1f_e_feederb1_peak = I_fault_1f_e_feederb1 * sqrt(2) %[output:376eb740]
 
 %% 1fe Export cable B zone
 
 %Current source B1
-z1 = Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
-z2 = Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + ((Z0_LSM1b_pu + Z0_TB1_pu)^-1 + (Z0_LSM1b_pu + Z0_LSM2_pu + Z0_TB2_pu)^-1)^-1
+z1 = Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:17c70aa2]
+z2 = Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu + ((Z0_LSM1a_pu + Z0_TB1_pu)^-1 + (Z0_LSM1b_pu + Z0_LSM2_pu + Z0_TB2_pu)^-1)^-1 %[output:6d749135]
 
-I_base_220kv = Sbase / (sqrt(3)*220e3)
-I_source_b1_220kv = 450e6 / (sqrt(3)*220e3)
-I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv
+I_base_220kv = Sbase / (sqrt(3)*220e3) %[output:3048f766]
+I_source_b1_220kv = 450e6 / (sqrt(3)*220e3) %[output:4ac1c279]
+I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv %[output:58ec45d1]
 
-I_fault_B1_export_pu = 1.1*I_source_b1_220kv_pu*(z1 / (z1 + z2))
-I_fault_B1_export_pu_abs = abs(I_fault_B1_export_pu)
-I_fault_B1_export = I_fault_B1_export_pu_abs * I_base_220kv
+I_fault_B1_export_pu = 1.1*I_source_b1_220kv_pu*(z1 / (z1 + z2)) %[output:0137b302]
+I_fault_B1_export_pu_abs = abs(I_fault_B1_export_pu) %[output:3af10921]
+I_fault_B1_export = I_fault_B1_export_pu_abs * I_base_220kv %[output:1ce996c5]
 
 %Current source B2
-z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
-z2 = Z1_LSM1b_pu + ((Z0_LSM1b_pu + Z0_LSM2_pu + Z0_TB2_pu)^-1 + (Z0_LSM1a_pu + Z0_TB1_pu)^-1)^-1 + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:09316920]
+z2 = Z1_LSM1b_pu + ((Z0_LSM1b_pu + Z0_LSM2_pu + Z0_TB2_pu)^-1 + (Z0_LSM1a_pu + Z0_TB1_pu)^-1)^-1 + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:680a1d69]
 
-I_source_b2_220kv = 450e6 / (sqrt(3)*220e3)
-I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv
-I_fault_B2_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2))
-I_fault_B2_export_pu_abs = abs(I_fault_B2_export_pu)
-I_fault_B2_export = I_fault_B2_export_pu_abs * I_base_220kv
+I_source_b2_220kv = 450e6 / (sqrt(3)*220e3) %[output:7d1ba7a7]
+I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv %[output:56a55a2d]
+I_fault_B2_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2)) %[output:861cb2f2]
+I_fault_B2_export_pu_abs = abs(I_fault_B2_export_pu) %[output:72ef06c4]
+I_fault_B2_export = I_fault_B2_export_pu_abs * I_base_220kv %[output:49b1f510]
+
+% I_grid_f_pu = 1 / (Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu)
+% abs(I_grid_f_pu*I_base_220kv)
 
 %Current source A
-z1 = Z1_grid_pu
-z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z0_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+z1 = Z1_grid_pu %[output:436f0dd0]
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z0_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:5406990f]
 
-I_source_A_220kv = 675e6 / (sqrt(3)*220e3)
-I_source_A_220kv_pu = I_source_A_220kv / I_base_220kv
-I_fault_A_export_pu = 1.1*I_source_A_220kv_pu*(z1 / (z1 + z2))
-I_fault_A_export_pu_abs = abs(I_fault_A_export_pu)
-I_fault_A_export = I_fault_A_export_pu_abs * I_base_220kv
+I_source_A_220kv = 675e6 / (sqrt(3)*220e3) %[output:629ca200]
+I_source_A_220kv_pu = I_source_A_220kv / I_base_220kv %[output:8528c142]
+I_fault_A_export_pu = 1.1*I_source_A_220kv_pu*(z1 / (z1 + z2)) %[output:8db19a03]
+I_fault_A_export_pu_abs = abs(I_fault_A_export_pu) %[output:5199dc54]
+I_fault_A_export = I_fault_A_export_pu_abs * I_base_220kv %[output:3f1a9742]
 
 %Voltage source Grid
-z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z1_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z0_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:7982006d]
 
-I_fault_grid_export_pu = 1 / z1
-I_fault_grid_export_pu_abs = abs(I_fault_grid_export_pu)
-I_fault_grid_export = I_fault_grid_export_pu_abs * I_base_220kv
+I_fault_grid_export_pu = 1 / z1 %[output:3ec4be92]
+I_fault_grid_export_pu_abs = abs(I_fault_grid_export_pu) %[output:53e28d73]
+I_fault_grid_export = I_fault_grid_export_pu_abs * I_base_220kv %[output:077e38f1]
 
 %Combine all contributions
-I_fault_1fe_export = I_fault_grid_export + I_fault_A_export + I_fault_B2_export +  I_fault_B1_export
+I_fault_1fe_export = I_fault_grid_export + I_fault_A_export + I_fault_B2_export +  I_fault_B1_export %[output:2ac2f42f]
+I_fault_1fe_export_peak = I_fault_1fe_export * sqrt(2) %[output:9953de2c]
 
 %% 3f Export cable B zone
 
 %Current source B1
 
-I_base_220kv = Sbase / (sqrt(3)*220e3)
-I_source_b1_220kv = 450e6 / (sqrt(3)*220e3)
-I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv
+I_base_220kv = Sbase / (sqrt(3)*220e3) %[output:1516e5fb]
+I_source_b1_220kv = 450e6 / (sqrt(3)*220e3) %[output:452d4e2c]
+I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv %[output:537a27bd]
 
-I_fault_B1_3f_export_pu = 1.1*I_source_b1_220kv_pu
-I_fault_B1_3f_export_pu_abs = abs(I_fault_B1_3f_export_pu)
-I_fault_B1_3f_export = I_fault_B1_3f_export_pu_abs * I_base_220kv
+I_fault_B1_3f_export_pu = 1.1*I_source_b1_220kv_pu %[output:7b82c7cf]
+I_fault_B1_3f_export_pu_abs = abs(I_fault_B1_3f_export_pu) %[output:333c7b03]
+I_fault_B1_3f_export = I_fault_B1_3f_export_pu_abs * I_base_220kv %[output:28cc8374]
 
 %Current source B2
-z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu
-z2 = Z1_LSM1b_pu
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:59b2be36]
+z2 = Z1_LSM1b_pu %[output:5bb17480]
 
-I_source_b2_220kv = 450e6 / (sqrt(3)*220e3)
-I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv
-I_fault_B2_3f_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2))
-I_fault_B2_3f_export_pu_abs = abs(I_fault_B2_3f_export_pu)
-I_fault_B2_3f_export = I_fault_B2_3f_export_pu_abs * I_base_220kv
+I_source_b2_220kv = 450e6 / (sqrt(3)*220e3) %[output:1d3265b4]
+I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv %[output:5766fa2b]
+I_fault_B2_3f_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2)) %[output:8cc65af6]
+I_fault_B2_3f_export_pu_abs = abs(I_fault_B2_3f_export_pu) %[output:3ae4d8fd]
+I_fault_B2_3f_export = I_fault_B2_3f_export_pu_abs * I_base_220kv %[output:8f2f9be7]
 
 %Current source A
-z1 = Z1_grid_pu
-z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
+z1 = Z1_grid_pu %[output:39393f5f]
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:01b93f97]
 
-I_source_A_220kv = 675e6 / (sqrt(3)*220e3)
-I_source_A_220kv_pu = I_source_A_220kv / I_base_220kv
-I_fault_A_3f_export_pu = 1.1*I_source_A_220kv_pu*(z1 / (z1 + z2))
-I_fault_A_3f_export_pu_abs = abs(I_fault_A_3f_export_pu)
-I_fault_A_3f_export = I_fault_A_3f_export_pu_abs * I_base_220kv
+I_source_A_220kv = 675e6 / (sqrt(3)*220e3) %[output:6af7d473]
+I_source_A_220kv_pu = I_source_A_220kv / I_base_220kv %[output:16b579be]
+I_fault_A_3f_export_pu = 1.1*I_source_A_220kv_pu*(z1 / (z1 + z2)) %[output:131b1551]
+I_fault_A_3f_export_pu_abs = abs(I_fault_A_3f_export_pu) %[output:4e55c73c]
+I_fault_A_3f_export = I_fault_A_3f_export_pu_abs * I_base_220kv %[output:2d4c3526]
 
 %Voltage source Grid
-z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu
-I_fault_grid_3f_export_pu = 1 / z1
-I_fault_grid_3f_export_pu_abs = abs(I_fault_grid_3f_export_pu)
-I_fault_grid_3f_export = I_fault_grid_3f_export_pu_abs * I_base_220kv
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:5c0b6459]
+I_fault_grid_3f_export_pu = 1 / z1 %[output:639106b1]
+I_fault_grid_3f_export_pu_abs = abs(I_fault_grid_3f_export_pu) %[output:9d83e423]
+I_fault_grid_3f_export = I_fault_grid_3f_export_pu_abs * I_base_220kv %[output:5e5e71b4]
 
 %Combine all contributions
-I_fault_3f_export = I_fault_grid_3f_export + I_fault_A_3f_export + I_fault_B2_3f_export +  I_fault_B1_3f_export
-
+I_fault_3f_export = I_fault_grid_3f_export + I_fault_A_3f_export + I_fault_B2_3f_export +  I_fault_B1_3f_export %[output:0951d554]
+I_fault_3f_export_peak = I_fault_3f_export * sqrt(2) %[output:46440cde]
 
 
 
 %% 3f Feeder cable B zone
 
 % Current source B1
-I_source_b1_pu = I_source_b1 / I_base_66kv %[output:0fdd8891]
-I_fault_b1_3f_feed_pu = 1.1*I_source_b1_pu %[output:6082474f]
-I_fault_b1_3f_feed_pu_abs = abs(I_fault_b1_3f_feed_pu) %[output:892f320d]
-I_fault_b1_3f_feed = I_fault_b1_3f_feed_pu_abs*I_base_66kv
+I_source_b1_pu = I_source_b1 / I_base_66kv %[output:12ab4a1e]
+I_fault_b1_3f_feed_pu = 1.1*I_source_b1_pu %[output:69927e43]
+I_fault_b1_3f_feed_pu_abs = abs(I_fault_b1_3f_feed_pu) %[output:7866429b]
+I_fault_b1_3f_feed = I_fault_b1_3f_feed_pu_abs*I_base_66kv %[output:83e31dad]
 
 % Current source B2
-z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:7dd2f6d9]
-z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu %[output:5ba312d3]
+z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:1ee00a8b]
+z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1b_pu + Z1_LSM1a_pu %[output:2514cf3d]
 
-I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:3300f802]
-I_source_b2_pu = I_source_b2 / I_base_66kv %[output:05453124]
-I_fault_b2_3f_feed_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
-I_fault_b2_3f_feed_pu_abs = abs(I_fault_b2_3f_feed_pu) %[output:9328fd92]
-I_fault_b1_3f_feed = I_fault_b2_3f_feed_pu_abs * I_base_66kv
+I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:0bc1c26d]
+I_source_b2_pu = I_source_b2 / I_base_66kv %[output:9a3616c8]
+I_fault_b2_3f_feed_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:44c2cb67]
+I_fault_b2_3f_feed_pu_abs = abs(I_fault_b2_3f_feed_pu) %[output:0921e874]
+I_fault_b1_3f_feed = I_fault_b2_3f_feed_pu_abs * I_base_66kv %[output:25911db7]
 
 % Current source A
-z1 = Z1_grid_pu %[output:6e9cf13a]
-z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:2defe093]
+z1 = Z1_grid_pu %[output:5e0a9cba]
+z2 = Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:762eedc7]
 
-I_source_A = 675e6 / (sqrt(3)*66e3) %[output:6d7d3db1]
-I_source_A_pu = I_source_A / I_base_66kv %[output:465c27ec]
-I_fault_A_3f_feed_pu = I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
-I_fault_A_3f_feed_pu_abs = abs(I_fault_A_3f_feed_pu) %[output:805c8d24]
-I_fault_A_3f_feed = I_fault_A_3f_feed_pu_abs * I_base_66kv
+I_source_A = 675e6 / (sqrt(3)*66e3) %[output:0dcc85be]
+I_source_A_pu = I_source_A / I_base_66kv %[output:9fcadc02]
+I_fault_A_3f_feed_pu = I_source_A_pu*(z1 / (z1 + z2)) %[output:5622e9fa]
+I_fault_A_3f_feed_pu_abs = abs(I_fault_A_3f_feed_pu) %[output:4be2c8a8]
+I_fault_A_3f_feed = I_fault_A_3f_feed_pu_abs * I_base_66kv %[output:9fd3c197]
 
 % Voltage source Grid
-z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:0964dbf0]
+z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:5f75e8b3]
 
-I_fault_grid_3f_feed_pu = 1 / z1 %[output:71fd220e]
-I_fault_grid_3f_feed_pu_abs = abs(I_fault_grid_3f_feed_pu) %[output:4ffc0fe6]
-I_fault_grid_3f_feed = I_fault_grid_3f_feed_pu_abs * I_base_66kv
+I_fault_grid_3f_feed_pu = 1 / z1 %[output:6ae09002]
+I_fault_grid_3f_feed_pu_abs = abs(I_fault_grid_3f_feed_pu) %[output:724428b8]
+I_fault_grid_3f_feed = I_fault_grid_3f_feed_pu_abs * I_base_66kv %[output:2c6a8e81]
 
-I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed + I_fault_b1_3f_feed
- 
+I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed + I_fault_b1_3f_feed %[output:228744af]
+I_fault_3f_feed_peak = I_fault_3f_feed * sqrt(2)
 
 
 %[appendix]{"version":"1.0"}
@@ -371,15 +394,6 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %---
 %[output:25e4c803]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Sbase","value":"100000000"}}
-%---
-%[output:20269858]
-%   data: {"dataType":"symbolic","outputData":{"name":"Zgrid_0","value":"R\\,{\\left(10+200\\,\\mathrm{i}\\right)}"}}
-%---
-%[output:5e860e2e]
-%   data: {"dataType":"symbolic","outputData":{"name":"X","value":"20\\,R"}}
-%---
-%[output:2f616fae]
-%   data: {"dataType":"symbolic","outputData":{"name":"Zgrid","value":"R\\,{\\left(1+20\\,\\mathrm{i}\\right)}"}}
 %---
 %[output:46123620]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Ugrid","value":"380000"}}
@@ -433,13 +447,13 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TA3","value":"0.0000 +20.2160i"}}
 %---
 %[output:50432b69]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1","value":"0.2420"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1","value":"0.0000 + 0.2420i"}}
 %---
 %[output:6111e463]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2","value":"0.2420"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2","value":"0.0000 + 0.2420i"}}
 %---
 %[output:406676ac]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb","value":"0.1210"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb","value":"0.0000 + 0.1210i"}}
 %---
 %[output:0499a215]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TB1_pu","value":"0.0000 + 0.0233i"}}
@@ -460,10 +474,10 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TB3_pu","value":"0.0000 + 0.0336i"}}
 %---
 %[output:0aaf1166]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1_pu","value":"0.0056"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb1_pu","value":"0.0000 + 0.0056i"}}
 %---
 %[output:81e8e5f2]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2_pu","value":"0.0056"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Btb2_pu","value":"0.0000 + 0.0056i"}}
 %---
 %[output:9040e91d]
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z1_TA_pu","value":"0.0000 + 0.0156i"}}
@@ -478,10 +492,10 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"Z0_TA3_pu","value":"0.0000 + 0.0336i"}}
 %---
 %[output:35148a5c]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb_pu","value":"0.0028"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z1_T_Atb_pu","value":"0.0000 + 0.0028i"}}
 %---
 %[output:91896ba5]
-%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_T_Atb_pu","value":"0.0067"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"Z0_T_Atb_pu","value":"0.0000 + 0.0067i"}}
 %---
 %[output:52bbb9d6]
 %   data: {"dataType":"textualVariable","outputData":{"name":"length","value":"60"}}
@@ -646,10 +660,10 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_pu","value":"4.5000"}}
 %---
 %[output:6082474f]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu","value":"0.8538 - 0.0012i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu","value":"0.9392 - 0.0014i"}}
 %---
 %[output:892f320d]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu_abs","value":"0.8538"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_pu_abs","value":"0.9392"}}
 %---
 %[output:7dd2f6d9]
 %   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0104 + 0.1797i"}}
@@ -664,10 +678,10 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_pu","value":"4.5000"}}
 %---
 %[output:93997cb6]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu","value":"1.4665 + 0.0814i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu","value":"1.6132 + 0.0896i"}}
 %---
 %[output:9328fd92]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu_abs","value":"1.4688"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_pu_abs","value":"1.6157"}}
 %---
 %[output:6e9cf13a]
 %   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0083 + 0.1655i"}}
@@ -682,10 +696,10 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_pu","value":"6.7500"}}
 %---
 %[output:12b91f3e]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu","value":"1.9058 + 0.1355i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu","value":"2.0964 + 0.1490i"}}
 %---
 %[output:805c8d24]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu_abs","value":"1.9106"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_pu_abs","value":"2.1017"}}
 %---
 %[output:0964dbf0]
 %   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0706 + 0.5346i"}}
@@ -697,17 +711,248 @@ I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed 
 %   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_pu_abs","value":"1.8544"}}
 %---
 %[output:09b65577]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1f_e_feederb1_pu","value":"4.4691 - 1.6227i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1f_e_feederb1_pu","value":"4.8918 - 1.6011i"}}
 %---
 %[output:3eb50380]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"3.9095e+03 - 1.4195e+03i"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"4.2792e+03 - 1.4006e+03i"}}
 %---
 %[output:6f1f88d8]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"4.1592e+03"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"4.5026e+03"}}
 %---
 %[output:11e0a50a]
-%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1f_e_feederb1_pu","value":"6.0877"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1f_e_feederb1_pu","value":"6.5110"}}
 %---
 %[output:376eb740]
-%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"5.3253e+03"}}
+%   data: {"dataType":"textualVariable","outputData":{"name":"ans","value":"5.6956e+03"}}
+%---
+%[output:17c70aa2]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0117 + 0.1829i"}}
+%---
+%[output:6d749135]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0156 + 0.2137i"}}
+%---
+%[output:3048f766]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_base_220kv","value":"262.4319"}}
+%---
+%[output:4ac1c279]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_220kv","value":"1.1809e+03"}}
+%---
+%[output:58ec45d1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_220kv_pu","value":"4.5000"}}
+%---
+%[output:0137b302]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_export_pu","value":"2.2821 + 0.0110i"}}
+%---
+%[output:3af10921]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_export_pu_abs","value":"2.2821"}}
+%---
+%[output:1ce996c5]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_export","value":"598.8999"}}
+%---
+%[output:09316920]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0104 + 0.1797i"}}
+%---
+%[output:680a1d69]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0169 + 0.2169i"}}
+%---
+%[output:7d1ba7a7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_220kv","value":"1.1809e+03"}}
+%---
+%[output:56a55a2d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_220kv_pu","value":"4.5000"}}
+%---
+%[output:861cb2f2]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_export_pu","value":"2.2411 + 0.0241i"}}
+%---
+%[output:72ef06c4]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_export_pu_abs","value":"2.2413"}}
+%---
+%[output:49b1f510]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_export","value":"588.1791"}}
+%---
+%[output:436f0dd0]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0083 + 0.1655i"}}
+%---
+%[output:5406990f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0193 + 0.2591i"}}
+%---
+%[output:629ca200]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_220kv","value":"1.7714e+03"}}
+%---
+%[output:8528c142]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_220kv_pu","value":"6.7500"}}
+%---
+%[output:8db19a03]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_export_pu","value":"2.8919 + 0.0427i"}}
+%---
+%[output:5199dc54]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_export_pu_abs","value":"2.8923"}}
+%---
+%[output:3f1a9742]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_export","value":"759.0205"}}
+%---
+%[output:7982006d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0275 + 0.4246i"}}
+%---
+%[output:3ec4be92]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_export_pu","value":"0.1520 - 2.3452i"}}
+%---
+%[output:53e28d73]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_export_pu_abs","value":"2.3501"}}
+%---
+%[output:077e38f1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_export","value":"616.7480"}}
+%---
+%[output:2ac2f42f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1fe_export","value":"2.5628e+03"}}
+%---
+%[output:9953de2c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_1fe_export_peak","value":"3.6244e+03"}}
+%---
+%[output:1516e5fb]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_base_220kv","value":"262.4319"}}
+%---
+%[output:452d4e2c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_220kv","value":"1.1809e+03"}}
+%---
+%[output:537a27bd]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_220kv_pu","value":"4.5000"}}
+%---
+%[output:7b82c7cf]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_3f_export_pu","value":"4.9500"}}
+%---
+%[output:333c7b03]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_3f_export_pu_abs","value":"4.9500"}}
+%---
+%[output:28cc8374]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B1_3f_export","value":"1.2990e+03"}}
+%---
+%[output:59b2be36]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0104 + 0.1797i"}}
+%---
+%[output:5bb17480]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0013 + 0.0032i"}}
+%---
+%[output:1d3265b4]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_220kv","value":"1.1809e+03"}}
+%---
+%[output:5766fa2b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_220kv_pu","value":"4.5000"}}
+%---
+%[output:8cc65af6]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_3f_export_pu","value":"4.8613 + 0.0287i"}}
+%---
+%[output:3ae4d8fd]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_3f_export_pu_abs","value":"4.8614"}}
+%---
+%[output:8f2f9be7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_B2_3f_export","value":"1.2758e+03"}}
+%---
+%[output:39393f5f]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0083 + 0.1655i"}}
+%---
+%[output:01b93f97]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0034 + 0.0174i"}}
+%---
+%[output:6af7d473]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_220kv","value":"1.7714e+03"}}
+%---
+%[output:16b579be]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_220kv_pu","value":"6.7500"}}
+%---
+%[output:131b1551]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_export_pu","value":"6.7130 + 0.0941i"}}
+%---
+%[output:4e55c73c]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_export_pu_abs","value":"6.7136"}}
+%---
+%[output:2d4c3526]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_export","value":"1.7619e+03"}}
+%---
+%[output:5c0b6459]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0117 + 0.1829i"}}
+%---
+%[output:639106b1]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_export_pu","value":"0.3488 - 5.4441i"}}
+%---
+%[output:9d83e423]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_export_pu_abs","value":"5.4552"}}
+%---
+%[output:5e5e71b4]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_export","value":"1.4316e+03"}}
+%---
+%[output:0951d554]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_3f_export","value":"5.7683e+03"}}
+%---
+%[output:46440cde]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_3f_export_peak","value":"8.1576e+03"}}
+%---
+%[output:12ab4a1e]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b1_pu","value":"4.5000"}}
+%---
+%[output:69927e43]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_3f_feed_pu","value":"4.9500"}}
+%---
+%[output:7866429b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_3f_feed_pu_abs","value":"4.9500"}}
+%---
+%[output:83e31dad]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_3f_feed","value":"4.3301e+03"}}
+%---
+%[output:1ee00a8b]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0104 + 0.1797i"}}
+%---
+%[output:2514cf3d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0082 + 0.0333i"}}
+%---
+%[output:0bc1c26d]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2","value":"3.9365e+03"}}
+%---
+%[output:9a3616c8]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_b2_pu","value":"4.5000"}}
+%---
+%[output:44c2cb67]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_3f_feed_pu","value":"3.7874 + 0.1101i"}}
+%---
+%[output:0921e874]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b2_3f_feed_pu_abs","value":"3.7890"}}
+%---
+%[output:25911db7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_b1_3f_feed","value":"3.3145e+03"}}
+%---
+%[output:5e0a9cba]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0083 + 0.1655i"}}
+%---
+%[output:762eedc7]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z2","value":"0.0103 + 0.0475i"}}
+%---
+%[output:0dcc85be]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A","value":"5.9047e+03"}}
+%---
+%[output:9fcadc02]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_source_A_pu","value":"6.7500"}}
+%---
+%[output:5622e9fa]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_feed_pu","value":"5.2290 + 0.1945i"}}
+%---
+%[output:4be2c8a8]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_feed_pu_abs","value":"5.2326"}}
+%---
+%[output:9fd3c197]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_A_3f_feed","value":"4.5774e+03"}}
+%---
+%[output:5f75e8b3]
+%   data: {"dataType":"textualVariable","outputData":{"name":"z1","value":"0.0186 + 0.2130i"}}
+%---
+%[output:6ae09002]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_feed_pu","value":"0.4070 - 4.6593i"}}
+%---
+%[output:724428b8]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_feed_pu_abs","value":"4.6770"}}
+%---
+%[output:2c6a8e81]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_grid_3f_feed","value":"4.0913e+03"}}
+%---
+%[output:228744af]
+%   data: {"dataType":"textualVariable","outputData":{"name":"I_fault_3f_feed","value":"1.5298e+04"}}
 %---
