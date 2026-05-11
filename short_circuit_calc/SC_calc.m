@@ -27,17 +27,21 @@ S_grid = 20e9 %[output:1fdf1a52]
 X0_X1_grid_ratio = 30
 
 R1_grid = 0.01 * ((Ugrid^2) / S_grid) / 10
-L1_grid = (0.1 / 100*pi) * ((Ugrid^2) / S_grid) / 10
+L1_grid = (0.1 / (100*pi)) * ((Ugrid^2) / S_grid) / 10
 
 ZL1_grid = 100*pi*L1_grid
 
+ZL1_grid / R1_grid
+
 Z1_grid = R1_grid + j*ZL1_grid
+Z1_grid_abs = abs(Z1_grid)
+
 Z1_grid_pu = Z1_grid * (Sbase / Ubase2^2)
 
 R0_grid = R1_grid*X0_X1_grid_ratio
 ZL0_grid = ZL1_grid*X0_X1_grid_ratio
 
-Z0_grid = R0_grid + j*Z0_grid_pu
+Z0_grid = R0_grid + j*ZL0_grid
 Z0_grid_pu = Z0_grid * (Sbase / Ubase2^2)
 
 %%\
@@ -119,6 +123,8 @@ R0_km = 0.1968 %[output:7f689431]
 Z0_L_km = j*0.1322 %[output:4288de9d]
 
 Z1_SM_line = length * (R1_km + Z1_L_km) %[output:6aa7f0c7]
+Z1_LSM1a = Z1_SM_line / 2
+Z1_LSM1b = Z1_SM_line / 2
 
 Z1_LSM1_pu = Z1_SM_line * (Sbase/Ubase^2) %[output:01213e93]
 Z1_LSM1a_pu = Z1_LSM1_pu/2 %[output:2275964a]
@@ -214,7 +220,7 @@ S_TA_Grounding = 100e6;
 Z0_TA_grouding = 0.025*(U_66kv^2 / S_TA_Grounding) + j*0.15*(U_66kv^2 / S_TA_Grounding)  %[output:69c16f1b]
 Z0_TA_grouding_pu = Z0_TA_grouding / (U_66kv^2 / S_TA_Grounding) %[output:2991768d]
 
-%% 1f to Earth fault calc Feeder B1 
+%% 1fe to Earth fault calc Feeder B1 
 %Current source B1
 z1 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu %[output:5af1fd3d]
 z2 = Z1_fLB1_pu + Z1_TB1_pu + Z1_LSM1a_pu + Z1_LSM1b_pu + Z1_TB3_pu + Z1_LON_B_pu + Z0_fLB1_pu + Z0_TB1_grouding_pu %[output:21ac6f82]
@@ -224,6 +230,8 @@ I_source_b1 = 450e6 / (sqrt(3)*66e3) %[output:104c5b7b]
 I_source_b1_pu = I_source_b1 / I_base_66kv %[output:0fdd8891]
 I_fault_b1_pu = 1.1*I_source_b1_pu*(z1 / (z1 + z2)) %[output:6082474f]
 I_fault_b1_pu_abs = abs(I_fault_b1_pu) %[output:892f320d]
+I_fault_b1_feeder = I_fault_b1_pu_abs*I_base_66kv
+I_fault_b1_feeder_peak = I_fault_b1_feeder*sqrt(2)
 
 %Current source B2
 z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:7dd2f6d9]
@@ -232,6 +240,8 @@ I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:3300f802]
 I_source_b2_pu = I_source_b2 / I_base_66kv %[output:05453124]
 I_fault_b2_pu = 1.1*I_source_b2_pu*(z1 / (z1 + z2)) %[output:93997cb6]
 I_fault_b2_pu_abs = abs(I_fault_b2_pu) %[output:9328fd92]
+I_fault_b2_feeder = I_fault_b2_pu_abs*I_base_66kv
+
 
 %Current source A
 z1 = Z1_grid_pu %[output:6e9cf13a]
@@ -241,12 +251,13 @@ I_source_A = 675e6 / (sqrt(3)*66e3) %[output:6d7d3db1]
 I_source_A_pu = I_source_A / I_base_66kv %[output:465c27ec]
 I_fault_A_pu = 1.1*I_source_A_pu*(z1 / (z1 + z2)) %[output:12b91f3e]
 I_fault_A_pu_abs = abs(I_fault_A_pu) %[output:805c8d24]
-
+I_fault_A_1fe_feed = I_fault_A_pu_abs*I_base_66kv
 %Voltage source Grid
 z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu + Z0_TB1_grouding_pu + Z0_fLB1_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_fLB1_pu %[output:0964dbf0]
 
-I_fault_grid_pu = 1 / z1 %[output:71fd220e]
+I_fault_grid_pu = 1.1 / z1 %[output:71fd220e]
 I_fault_grid_pu_abs = abs(I_fault_grid_pu) %[output:4ffc0fe6]
+I_fault_grid_1fe_feed = I_fault_grid_pu_abs*I_base_66kv
 
 I_fault_1f_e_feederb1_pu = I_fault_grid_pu + I_fault_A_pu + I_fault_b2_pu + I_fault_b1_pu %[output:09b65577]
 I_fault_1f_e_feederb1_pu * I_base_66kv %[output:3eb50380]
@@ -269,6 +280,7 @@ I_source_b1_220kv_pu = I_source_b1_220kv / I_base_220kv %[output:58ec45d1]
 I_fault_B1_export_pu = 1.1*I_source_b1_220kv_pu*(z1 / (z1 + z2)) %[output:0137b302]
 I_fault_B1_export_pu_abs = abs(I_fault_B1_export_pu) %[output:3af10921]
 I_fault_B1_export = I_fault_B1_export_pu_abs * I_base_220kv %[output:1ce996c5]
+I_fault_B1_export_peak = I_fault_B1_export * sqrt(2)
 
 %Current source B2
 z1 = Z1_TB3_pu + Z1_LON_B_pu + Z1_grid_pu %[output:09316920]
@@ -279,6 +291,7 @@ I_source_b2_220kv_pu = I_source_b2_220kv / I_base_220kv %[output:56a55a2d]
 I_fault_B2_export_pu = 1.1*I_source_b2_220kv_pu*(z1 / (z1 + z2)) %[output:861cb2f2]
 I_fault_B2_export_pu_abs = abs(I_fault_B2_export_pu) %[output:72ef06c4]
 I_fault_B2_export = I_fault_B2_export_pu_abs * I_base_220kv %[output:49b1f510]
+I_fault_B2_export_peak = I_fault_B2_export * sqrt(2)
 
 % I_grid_f_pu = 1 / (Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu)
 % abs(I_grid_f_pu*I_base_220kv)
@@ -296,7 +309,7 @@ I_fault_A_export = I_fault_A_export_pu_abs * I_base_220kv %[output:3f1a9742]
 %Voltage source Grid
 z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z0_TB1_pu + Z0_LSM1a_pu + Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:7982006d]
 
-I_fault_grid_export_pu = 1 / z1 %[output:3ec4be92]
+I_fault_grid_export_pu = 1.1 / z1 %[output:3ec4be92]
 I_fault_grid_export_pu_abs = abs(I_fault_grid_export_pu) %[output:53e28d73]
 I_fault_grid_export = I_fault_grid_export_pu_abs * I_base_220kv %[output:077e38f1]
 
@@ -338,7 +351,7 @@ I_fault_A_3f_export = I_fault_A_3f_export_pu_abs * I_base_220kv %[output:2d4c352
 
 %Voltage source Grid
 z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu %[output:5c0b6459]
-I_fault_grid_3f_export_pu = 1 / z1 %[output:639106b1]
+I_fault_grid_3f_export_pu = 1.1 / z1 %[output:639106b1]
 I_fault_grid_3f_export_pu_abs = abs(I_fault_grid_3f_export_pu) %[output:9d83e423]
 I_fault_grid_3f_export = I_fault_grid_3f_export_pu_abs * I_base_220kv %[output:5e5e71b4]
 
@@ -364,7 +377,7 @@ I_source_b2 = 450e6 / (sqrt(3)*66e3) %[output:0bc1c26d]
 I_source_b2_pu = I_source_b2 / I_base_66kv %[output:9a3616c8]
 I_fault_b2_3f_feed_pu = I_source_b2_pu*(z1 / (z1 + z2)) %[output:44c2cb67]
 I_fault_b2_3f_feed_pu_abs = abs(I_fault_b2_3f_feed_pu) %[output:0921e874]
-I_fault_b1_3f_feed = I_fault_b2_3f_feed_pu_abs * I_base_66kv %[output:25911db7]
+I_fault_b2_3f_feed = I_fault_b2_3f_feed_pu_abs * I_base_66kv %[output:25911db7]
 
 % Current source A
 z1 = Z1_grid_pu %[output:5e0a9cba]
@@ -379,11 +392,11 @@ I_fault_A_3f_feed = I_fault_A_3f_feed_pu_abs * I_base_66kv %[output:9fd3c197]
 % Voltage source Grid
 z1 = Z1_grid_pu + Z1_LON_B_pu + Z1_TB3_pu + Z1_LSM1b_pu + Z1_LSM1a_pu + Z1_TB1_pu + Z1_fLB1_pu %[output:5f75e8b3]
 
-I_fault_grid_3f_feed_pu = 1 / z1 %[output:6ae09002]
+I_fault_grid_3f_feed_pu = 1.1 / z1 %[output:6ae09002]
 I_fault_grid_3f_feed_pu_abs = abs(I_fault_grid_3f_feed_pu) %[output:724428b8]
 I_fault_grid_3f_feed = I_fault_grid_3f_feed_pu_abs * I_base_66kv %[output:2c6a8e81]
 
-I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed + I_fault_b1_3f_feed %[output:228744af]
+I_fault_3f_feed = I_fault_grid_3f_feed + I_fault_A_3f_feed + I_fault_b1_3f_feed + I_fault_b2_3f_feed %[output:228744af]
 I_fault_3f_feed_peak = I_fault_3f_feed * sqrt(2)
 
 
